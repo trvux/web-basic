@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user'] = [
             'id' => $user['id'],
             'username' => $user['username'],
+            'name' => $user['full_name'] ?: $user['username'], // tên hiển thị
             'role' => $user['role'],
         ];
         // admin vào dashboard, khách về trang chủ
