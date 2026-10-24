@@ -1,0 +1,47 @@
+# Cấu hình chạy trên VPS (web.phren.dev). Dev trên máy vẫn dùng docker-compose.yml.
+# Khác bản dev: không mở cổng MySQL/phpMyAdmin ra ngoài, mật khẩu lấy từ file .env,
+# Caddy đứng trước lo HTTPS + chặn index, chỉ cổng 80/443 ra internet.
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_NAME: shop
+      DB_USER: shop
+      DB_PASS: ${DB_PASS}
+    volumes:
+      - ./docker/php-prod.ini:/usr/local/etc/php/conf.d/zz-prod.ini:ro
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
+      MYSQL_DATABASE: shop
+      MYSQL_USER: shop
+      MYSQL_PASSWORD: ${DB_PASS}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+
+volumes:
+  db_data:
+  caddy_data:
+  caddy_config:
