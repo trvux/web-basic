@@ -87,3 +87,13 @@ Rồi lên GitHub tạo **Pull Request** vào `main`, nhờ leader review và me
 3. Mật khẩu dùng `password_hash()` / `password_verify()`, không lưu thô.
 4. Mỗi trang PHP bắt đầu bằng `require_once` header, kết thúc bằng footer (xem file mẫu).
 5. Kết nối DB host là `db`, không phải `localhost`.
+
+## 6. Tài khoản trên web thật (web.phren.dev)
+
+Tài khoản được tạo thẳng trong DB trên VPS (không commit vào git). Leader thêm người mới bằng:
+
+```bash
+./scripts/add-user.sh <mã-số-sinh-viên> <mật-khẩu> [user|admin]
+```
+
+Đăng nhập tại https://web.phren.dev/auth/login.php. **Không commit** mật khẩu, `.env` hay mã số sinh viên vào repo (repo này public).
