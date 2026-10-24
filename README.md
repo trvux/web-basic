@@ -48,7 +48,7 @@ src/
   orders/            đơn hàng của tôi (khách)
 db/init.sql          tạo bảng + dữ liệu mẫu
 
-Tài khoản test: `admin / admin123` (admin), `user / user123` (khách)
+Tài khoản test (**chỉ có trên máy dev**, bản chạy thật dùng mật khẩu khác): `admin / admin123` (admin), `user / user123` (khách)
 ```
 
 ## 3. Phân công
