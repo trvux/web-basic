@@ -1,0 +1,16 @@
+web.phren.dev {
+	# Không cho công cụ tìm kiếm index (2 lớp: header + robots.txt)
+	header X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+
+	handle /robots.txt {
+		respond `User-agent: *
+Disallow: /
+` 200
+	}
+
+	handle {
+		reverse_proxy web:80
+	}
+
+	encode gzip
+}
