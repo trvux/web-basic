@@ -1,0 +1,74 @@
+name: CI / Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Mỗi lần chỉ chạy 1 deploy, không chạy chồng lên nhau
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  lint:
+    name: Kiểm tra cú pháp PHP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: php -l toàn bộ file
+        run: |
+          docker run --rm -v "$PWD":/app -w /app php:8-cli sh -c '
+            find src -name "*.php" -print0 | xargs -0 -n1 php -l > /tmp/lint.txt 2>&1
+            rc=$?
+            grep -v "^No syntax errors" /tmp/lint.txt
+            exit $rc'
+
+      - name: Không có "?>" trong comment (sẽ làm PHP thoát chế độ code giữa chừng)
+        run: |
+          if grep -rnE '^\s*(//|#).*\?>' src --include='*.php'; then
+            echo "::error::Có comment chứa ?> - xoá hoặc viết lại comment đó"
+            exit 1
+          fi
+
+  deploy:
+    name: Deploy lên web.phren.dev
+    needs: lint
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cấu hình SSH tới VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host phren-vps
+            HostName $VPS_HOST
+            User root
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+          EOF
+
+      - name: Deploy (rsync + docker compose)
+        run: ./deploy.sh
+
+      - name: Kiểm tra site còn sống
+        run: |
+          for i in $(seq 1 20); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' https://web.phren.dev/index.php || true)
+            [ "$code" = "200" ] && echo "OK (200)" && exit 0
+            sleep 3
+          done
+          echo "::error::web.phren.dev không trả 200 sau khi deploy"
+          exit 1
