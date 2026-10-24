@@ -24,7 +24,7 @@ $cartCount = array_sum($_SESSION['cart'] ?? []);
 
     <div class="ml-auto flex items-center gap-1">
       <?php if (!empty($_SESSION['user'])): ?>
-        <span class="px-2 opacity-90">Xin chào, <?= e($_SESSION['user']['username']) ?></span>
+        <span class="px-2 opacity-90">Xin chào, <?= e($_SESSION['user']['name'] ?? $_SESSION['user']['username']) ?></span>
         <a href="/auth/logout.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Đăng xuất</a>
       <?php else: ?>
         <a href="/auth/login.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Đăng nhập</a>

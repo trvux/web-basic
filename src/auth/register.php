@@ -5,6 +5,7 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
+    $fullName = trim($_POST['full_name'] ?? '');
     $password = $_POST['password'];
     $confirm = $_POST['confirm'];
 
@@ -21,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Mã hoá mật khẩu trước khi lưu, KHÔNG lưu mật khẩu thô
             $hash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare('INSERT INTO users (username, password) VALUES (?, ?)');
-            $stmt->execute([$username, $hash]);
+            $stmt = $pdo->prepare('INSERT INTO users (username, full_name, password) VALUES (?, ?, ?)');
+            $stmt->execute([$username, $fullName !== '' ? $fullName : null, $hash]);
             header('Location: login.php');
             exit;
         }
@@ -38,6 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <form method="post" class="<?= UI_CARD_CONTENT ?> gap-4!">
       <?php if ($error): ?><div class="<?= UI_ALERT_ERROR ?>"><?= e($error) ?></div><?php endif; ?>
+      <div class="<?= UI_FIELD ?>">
+        <label class="<?= UI_LABEL ?>" for="full_name">Họ tên</label>
+        <input class="<?= UI_INPUT ?>" id="full_name" type="text" name="full_name">
+      </div>
       <div class="<?= UI_FIELD ?>">
         <label class="<?= UI_LABEL ?>" for="username">Tên đăng nhập</label>
         <input class="<?= UI_INPUT ?>" id="username" type="text" name="username" required>
