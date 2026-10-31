@@ -1,0 +1,3 @@
+# Mọi thay đổi vào main cần leader duyệt (kết hợp branch protection "require code owner review").
+# Muốn mỗi thư mục tự gọi đúng người review, thêm dòng dạng:  /src/admin/products/  @ten-github
+*  @trvux
