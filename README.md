@@ -9,6 +9,7 @@ git clone <link-repo>
 cd web-basic
 unzip ~/Downloads/laptop-data-pack.zip   # gói dữ liệu nhóm trưởng gửi, giải nén ngay trong thư mục web-basic
 docker compose up -d --build
+./scripts/migrate.sh                    # áp các thay đổi DB mới nhất (an toàn khi chạy lại)
 ```
 
 **Gói dữ liệu** (`laptop-data-pack.zip`) chứa 100 laptop + ảnh. Nó không nằm trong git vì repo này public (dữ liệu lấy từ gearvn.com). Giải nén **trước** lần chạy đầu tiên thì DB tự có sẵn sản phẩm. Lỡ chạy rồi mới giải nén thì reset DB một lần (mục "Reset database" bên dưới). Chưa có gói dữ liệu thì web vẫn chạy nhưng chưa có sản phẩm.
@@ -25,7 +26,7 @@ Tắt: `docker compose down`
 **Sửa code PHP xong chỉ cần F5 trình duyệt**, không cần build lại (thư mục `src/` được mount thẳng vào container).
 
 ### Reset database
-Các file `.sql` trong `db/` chỉ chạy **lần đầu**, khi volume DB còn trống: `init.sql` (bảng, tài khoản, danh mục) rồi `seed-products.sql` (100 laptop, **không có trong git**, xem mục 5). Nếu sửa cấu trúc bảng hoặc muốn DB sạch lại:
+Các file `.sql` trong `db/` chỉ chạy **lần đầu**, khi volume DB còn trống: `init.sql` (bảng, tài khoản, danh mục) rồi `seed-products.sql` (100 laptop, **không có trong git**, xem mục 8). Nếu sửa cấu trúc bảng hoặc muốn DB sạch lại:
 
 ```bash
 docker compose down -v   # -v xoá luôn dữ liệu
@@ -52,7 +53,7 @@ src/
   cart/              giỏ hàng (session) + đặt hàng
   orders/            đơn hàng của tôi (khách)
 db/init.sql          tạo bảng, tài khoản test, danh mục
-db/seed-products.sql 100 laptop (TỰ SINH, không commit - xem mục 5)
+db/seed-products.sql 100 laptop (TỰ SINH, không commit - xem mục 8)
 data/                dữ liệu crawl từ gearvn.com (không commit)
 scripts/             crawl_gearvn.py -> download_images.py -> normalize_data.py -> build_seed_sql.py
 src/uploads/products ảnh sản phẩm (không commit)
@@ -75,19 +76,53 @@ Mỗi người làm trong thư mục riêng nên gần như không bị conflict
 
 ## 4. Quy trình Git (mỗi người làm)
 
+**Nguyên tắc: không ai push thẳng vào `main`.** `main` tự deploy lên web.phren.dev, code lỗi là lên thẳng web thật. Mọi thứ đi qua Pull Request, leader duyệt và bấm merge.
+
 ```bash
+# 1. Đầu mỗi buổi làm: kéo main mới nhất rồi tách nhánh MỚI cho việc của mình
 git checkout main
-git pull                          # luôn pull trước khi làm
+git pull origin main
+./scripts/migrate.sh              # áp thay đổi DB của người khác (nếu có)
 git checkout -b feature/ten-viec  # vd: feature/categories
 
-# ... code, test trên localhost:8088 ...
-
+# 2. Code, test trên localhost:8088, commit thường xuyên
 git add .
 git commit -m "Thêm CRUD danh mục"
+
+# 3. Đẩy nhánh lên và tạo Pull Request vào main
 git push -u origin feature/ten-viec
 ```
 
-Rồi lên GitHub tạo **Pull Request** vào `main`, nhờ leader review và merge. **Không push thẳng vào `main`.**
+**PR nhỏ, merge sớm.** Một PR = một việc nhỏ làm xong trong 1-2 ngày. Nhánh để càng lâu thì conflict càng to.
+
+**Chỉ sửa file trong thư mục việc của mình (mục 3).** File dùng chung (`src/includes/header.php`, `ui.php`, `src/index.php`, `db/init.sql`) chỉ leader sửa; cần gì thì nhắn leader. Hai người sửa cùng một file là nguyên nhân gây conflict.
+
+### Khi GitHub báo "This branch has conflicts"
+
+Conflict nghĩa là có người merge vào `main` trước, và hai bên sửa cùng một chỗ. Gỡ ngay trên nhánh của mình:
+
+```bash
+git checkout feature/ten-viec
+git pull origin main          # kéo main mới vào nhánh mình
+```
+
+Nếu Git báo `CONFLICT` thì mở file đó, tìm khối này và giữ lại đúng code (thường là cả hai bên), xóa 3 dòng đánh dấu:
+
+```
+<<<<<<< HEAD
+code của mình
+=======
+code của người khác
+>>>>>>> origin/main
+```
+
+```bash
+git add <file-vừa-sửa>
+git commit                    # để nguyên message Git đưa sẵn
+git push
+```
+
+Không biết gỡ thì **nhắn leader, đừng xóa đại code của người khác.** Không bao giờ dùng `git push --force`.
 
 ## 5. Luật code (để khỏi bị lỗi/bị trừ điểm)
 
@@ -107,7 +142,11 @@ Tài khoản được tạo thẳng trong DB trên VPS (không commit vào git).
 
 Đăng nhập tại https://web.phren.dev/auth/login.php. **Không commit** mật khẩu, `.env` hay mã số sinh viên vào repo (repo này public).
 
-## 5. Dữ liệu sản phẩm (laptop từ gearvn.com)
+## 7. Thay đổi cấu trúc DB (migration)
+
+**Không sửa `db/init.sql`** (nó chỉ tạo DB mới lần đầu, và là file dễ conflict nhất). Cần thêm bảng/cột thì tạo file mới `db/migrations/YYYY-MM-DD-ten-viec.sql`, rồi chạy `./scripts/migrate.sh` (an toàn khi chạy nhiều lần). Sau mỗi lần `git pull` cũng chạy lại lệnh này. Chi tiết và ví dụ: `db/migrations/README.md`. Trên web thật, `deploy.sh` tự áp sau khi merge vào `main`.
+
+## 8. Dữ liệu sản phẩm (laptop từ gearvn.com)
 
 Sản phẩm, ảnh, thông số, bài viết lấy từ [gearvn.com](https://gearvn.com/collections/laptop) làm dữ liệu mẫu cho đồ án (nguồn từng sản phẩm lưu ở cột `products.source_url`). **Repo này public nên dữ liệu và ảnh không nằm trong git**: chỉ có script. Để có dữ liệu ở máy mình, nhận gói dữ liệu từ nhóm trưởng (giải nén vào `data/`, `src/uploads/products/`, `db/seed-products.sql`) hoặc tự chạy theo thứ tự (chỉ cần Python 3, mất vài phút):
 
