@@ -20,7 +20,7 @@ Tắt: `docker compose down`
 **Sửa code PHP xong chỉ cần F5 trình duyệt**, không cần build lại (thư mục `src/` được mount thẳng vào container).
 
 ### Reset database
-File `db/init.sql` chỉ chạy **lần đầu**. Nếu sửa cấu trúc bảng hoặc muốn DB sạch lại:
+Các file `.sql` trong `db/` chỉ chạy **lần đầu**, khi volume DB còn trống: `init.sql` (bảng, tài khoản, danh mục) rồi `seed-products.sql` (100 laptop, **không có trong git**, xem mục 5). Nếu sửa cấu trúc bảng hoặc muốn DB sạch lại:
 
 ```bash
 docker compose down -v   # -v xoá luôn dữ liệu
@@ -46,7 +46,11 @@ src/
   auth/              đăng ký / đăng nhập / đăng xuất
   cart/              giỏ hàng (session) + đặt hàng
   orders/            đơn hàng của tôi (khách)
-db/init.sql          tạo bảng + dữ liệu mẫu
+db/init.sql          tạo bảng, tài khoản test, danh mục
+db/seed-products.sql 100 laptop (TỰ SINH, không commit - xem mục 5)
+data/                dữ liệu crawl từ gearvn.com (không commit)
+scripts/             crawl_gearvn.py -> download_images.py -> normalize_data.py -> build_seed_sql.py
+src/uploads/products ảnh sản phẩm (không commit)
 
 Tài khoản test (**chỉ có trên máy dev**, bản chạy thật dùng mật khẩu khác): `admin / admin123` (admin), `user / user123` (khách)
 ```
@@ -97,3 +101,17 @@ Tài khoản được tạo thẳng trong DB trên VPS (không commit vào git).
 ```
 
 Đăng nhập tại https://web.phren.dev/auth/login.php. **Không commit** mật khẩu, `.env` hay mã số sinh viên vào repo (repo này public).
+
+## 5. Dữ liệu sản phẩm (laptop từ gearvn.com)
+
+Sản phẩm, ảnh, thông số, bài viết lấy từ [gearvn.com](https://gearvn.com/collections/laptop) làm dữ liệu mẫu cho đồ án (nguồn từng sản phẩm lưu ở cột `products.source_url`). **Repo này public nên dữ liệu và ảnh không nằm trong git**: chỉ có script. Để có dữ liệu ở máy mình, nhận gói dữ liệu từ nhóm trưởng (giải nén vào `data/`, `src/uploads/products/`, `db/seed-products.sql`) hoặc tự chạy theo thứ tự (chỉ cần Python 3, mất vài phút):
+
+```bash
+python3 scripts/crawl_gearvn.py 100     # tải dữ liệu  -> data/gearvn_laptops.json
+python3 scripts/download_images.py      # tải ảnh      -> src/uploads/products/
+python3 scripts/normalize_data.py       # chuẩn hóa    -> data/laptops_clean.json
+python3 scripts/build_seed_sql.py       # sinh SQL     -> db/seed-products.sql
+docker compose down -v && docker compose up -d   # nạp lại vào DB
+```
+
+Bảng: `products` (có các cột lọc như `ram_gb`, `ssd_gb`, `screen_inch`, `brand`...) và `product_specs` (bảng thông số đầy đủ, mỗi dòng một thông số).
