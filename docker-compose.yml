@@ -16,7 +16,8 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       # chỉ chạy lần đầu khi volume còn trống
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # cả thư mục db/: MySQL chạy các file .sql theo thứ tự chữ cái (init.sql rồi seed-products.sql nếu có)
+      - ./db:/docker-entrypoint-initdb.d:ro
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   phpmyadmin:

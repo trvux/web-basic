@@ -15,7 +15,47 @@ CREATE TABLE IF NOT EXISTS products (
   image VARCHAR(500),
   category_id INT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  -- Phần mở rộng (nullable để form admin cũ vẫn thêm/sửa được sản phẩm chỉ với các cột trên)
+  slug VARCHAR(255) NULL UNIQUE,
+  sku VARCHAR(100) NULL UNIQUE,
+  brand VARCHAR(50) NULL,
+  old_price INT NULL,              -- giá gốc, có thì hiện giá gạch ngang
+  article MEDIUMTEXT NULL,         -- bài viết giới thiệu (HTML đã làm sạch)
+  source_url VARCHAR(500) NULL,    -- nguồn dữ liệu (ghi nguồn khi hiển thị)
+
+  -- Các thuộc tính dạng số/gọn để LỌC và SẮP XẾP (bảng đầy đủ nằm ở product_specs)
+  cpu VARCHAR(255) NULL,
+  cpu_brand VARCHAR(20) NULL,
+  cpu_line VARCHAR(50) NULL,
+  ram_gb SMALLINT NULL,
+  ram_type VARCHAR(30) NULL,
+  ssd_gb SMALLINT UNSIGNED NULL,
+  gpu VARCHAR(255) NULL,
+  gpu_brand VARCHAR(20) NULL,
+  vram_gb SMALLINT NULL,
+  screen_inch DECIMAL(3,1) NULL,
+  refresh_hz SMALLINT NULL,
+  resolution VARCHAR(100) NULL,
+  os VARCHAR(100) NULL,
+  weight_kg DECIMAL(4,2) NULL,
+  battery_wh DECIMAL(5,1) NULL,
+  warranty_months TINYINT NULL,
+  use_case VARCHAR(255) NULL,      -- nhu cầu: "Gaming, Đồ họa..." (không đặt tên usage vì là từ khoá MySQL)
+
   FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+);
+
+-- Bảng thông số kỹ thuật đầy đủ: mỗi dòng 1 thông số, nhóm theo group_name
+CREATE TABLE IF NOT EXISTS product_specs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  product_id INT NOT NULL,
+  group_name VARCHAR(50) NOT NULL,
+  label VARCHAR(100) NOT NULL,
+  value TEXT NOT NULL,
+  sort_order SMALLINT NOT NULL DEFAULT 0,
+  INDEX (product_id, sort_order),
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -45,19 +85,9 @@ CREATE TABLE IF NOT EXISTS order_items (
   FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
 
-INSERT INTO categories (name) VALUES ('Laptop văn phòng'), ('Laptop gaming'), ('Phụ kiện');
+INSERT INTO categories (name) VALUES ('Laptop văn phòng'), ('Laptop gaming');
 
-INSERT INTO products (name, price, stock, description, image, category_id) VALUES
-('Dell Inspiron 15', 15990000, 10, 'i5, 16GB RAM, 512GB SSD', 'https://placehold.co/300x300?text=Dell+Inspiron', 1),
-('HP Pavilion 14', 14500000, 8, 'i5, 8GB RAM, 512GB SSD', 'https://placehold.co/300x300?text=HP+Pavilion', 1),
-('Lenovo ThinkPad E14', 19900000, 6, 'i7, 16GB RAM, 512GB SSD', 'https://placehold.co/300x300?text=ThinkPad', 1),
-('MacBook Air M2', 24990000, 4, 'M2, 8GB RAM, 256GB SSD', 'https://placehold.co/300x300?text=MacBook+Air', 1),
-('ASUS TUF Gaming F15', 22990000, 5, 'i7, RTX 4050, 16GB RAM', 'https://placehold.co/300x300?text=ASUS+TUF', 2),
-('Acer Nitro 5', 20990000, 7, 'i5, RTX 3050, 16GB RAM', 'https://placehold.co/300x300?text=Acer+Nitro', 2),
-('MSI Katana 15', 27990000, 3, 'i7, RTX 4060, 16GB RAM', 'https://placehold.co/300x300?text=MSI+Katana', 2),
-('Chuột Logitech M331', 250000, 40, 'Chuột không dây im lặng', 'https://placehold.co/300x300?text=Chuot', 3),
-('Bàn phím cơ Keychron K2', 1890000, 15, 'Bluetooth, switch brown', 'https://placehold.co/300x300?text=Ban+phim', 3),
-('Balo laptop 15.6 inch', 350000, 25, 'Chống nước', 'https://placehold.co/300x300?text=Balo', 3);
+-- Sản phẩm thật nằm trong db/seed-products.sql (do scripts/build_seed_sql.py sinh ra)
 
 -- Tài khoản test: admin / admin123  và  user / user123
 INSERT INTO users (username, password, role) VALUES
