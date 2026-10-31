@@ -22,5 +22,8 @@ ssh "$HOST" "cd $DIR && [ -f .env ] || printf 'DB_ROOT_PASS=%s\nDB_PASS=%s\n' \"
 echo "==> Build và chạy"
 ssh "$HOST" "cd $DIR && docker compose -f docker-compose.prod.yml up -d --build"
 
+echo "==> Áp migration DB (file mới trong db/migrations/, nếu có)"
+ssh "$HOST" "cd $DIR && COMPOSE='docker compose -f docker-compose.prod.yml' bash scripts/migrate.sh"
+
 echo "==> Xong. Trạng thái:"
 ssh "$HOST" "cd $DIR && docker compose -f docker-compose.prod.yml ps"
