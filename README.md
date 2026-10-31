@@ -7,8 +7,13 @@ Cần cài sẵn **Docker Desktop**. Không cần cài PHP/MySQL/Apache gì thê
 ```bash
 git clone <link-repo>
 cd web-basic
+unzip ~/Downloads/laptop-data-pack.zip   # gói dữ liệu nhóm trưởng gửi, giải nén ngay trong thư mục web-basic
 docker compose up -d --build
 ```
+
+**Gói dữ liệu** (`laptop-data-pack.zip`) chứa 100 laptop + ảnh. Nó không nằm trong git vì repo này public (dữ liệu lấy từ gearvn.com). Giải nén **trước** lần chạy đầu tiên thì DB tự có sẵn sản phẩm. Lỡ chạy rồi mới giải nén thì reset DB một lần (mục "Reset database" bên dưới). Chưa có gói dữ liệu thì web vẫn chạy nhưng chưa có sản phẩm.
+
+Tài khoản đăng nhập thử có sẵn: `admin / admin123` (vào trang quản trị), `user / user123` (khách).
 
 | Cái gì | Địa chỉ |
 |---|---|
