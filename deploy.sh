@@ -10,7 +10,11 @@ echo "==> Đồng bộ code lên $HOST:$DIR"
 ssh "$HOST" "mkdir -p $DIR"
 rsync -az --delete \
   --exclude '.git' --exclude '.env' --exclude '.DS_Store' --exclude '.idea' \
+  --exclude 'data' --exclude 'src/uploads/products' \
   ./ "$HOST:$DIR/"
+# Ảnh sản phẩm không nằm trong git (repo public) nên được copy tay lên VPS một lần:
+#   rsync -az src/uploads/products/ phren-vps:/opt/web-phren/src/uploads/products/
+# Dòng --exclude ở trên giữ cho --delete không xóa chúng mỗi lần deploy.
 
 echo "==> Tạo .env (mật khẩu DB ngẫu nhiên) nếu chưa có"
 ssh "$HOST" "cd $DIR && [ -f .env ] || printf 'DB_ROOT_PASS=%s\nDB_PASS=%s\n' \"\$(openssl rand -hex 16)\" \"\$(openssl rand -hex 16)\" > .env && chmod 600 .env"
