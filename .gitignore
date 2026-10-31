@@ -3,3 +3,11 @@
 .vscode/
 *.log
 .env
+
+# dữ liệu crawl: cache HTML rất nặng, không commit
+data/.cache/
+
+# Dữ liệu/ảnh lấy từ gearvn.com: chỉ nằm trong DB và máy, KHÔNG đưa lên git (repo public)
+data/
+src/uploads/products/
+db/seed-products.sql
