@@ -36,6 +36,8 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Các subdomain khác của phren.dev (mỗi sản phẩm một file .caddy), nằm ngoài repo này
+      - /opt/phren-hub/sites:/etc/caddy/sites:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:

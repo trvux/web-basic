@@ -14,3 +14,8 @@ Disallow: /
 
 	encode gzip
 }
+
+# Hub phren.dev: mỗi sản phẩm khác (reperi.phren.dev, murmr.phren.dev, ...) tự thả file <tên>.caddy vào
+# /opt/phren-hub/sites trên VPS (thư mục này được mount vào container, xem docker-compose.prod.yml),
+# nên thêm sản phẩm mới không phải sửa file này.
+import /etc/caddy/sites/*.caddy
