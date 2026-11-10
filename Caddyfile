@@ -14,3 +14,10 @@ Disallow: /
 
 	encode gzip
 }
+
+# Trang giới thiệu Reperi (repo trvux/reperi). Container reperiweb nằm ở /opt/reperiweb, tự nối vào mạng
+# web-phren_default nên Caddy gọi được theo tên. Khác web.phren.dev: cho công cụ tìm kiếm index.
+reperi.phren.dev {
+	encode gzip
+	reverse_proxy reperiweb:8090
+}
