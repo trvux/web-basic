@@ -142,6 +142,8 @@ Tài khoản được tạo thẳng trong DB trên VPS (không commit vào git).
 
 Đăng nhập tại https://web.phren.dev/auth/login.php. **Không commit** mật khẩu, `.env` hay mã số sinh viên vào repo (repo này public).
 
+Caddy của project này cũng phục vụ các subdomain khác của `phren.dev` (ví dụ `reperi.phren.dev`): mỗi sản phẩm tự thả một file `<tên>.caddy` vào `/opt/phren-hub/sites` trên VPS, nên **không cần sửa `Caddyfile` ở đây** khi có sản phẩm mới.
+
 ## 7. Thay đổi cấu trúc DB (migration)
 
 **Không sửa `db/init.sql`** (nó chỉ tạo DB mới lần đầu, và là file dễ conflict nhất). Cần thêm bảng/cột thì tạo file mới `db/migrations/YYYY-MM-DD-ten-viec.sql`, rồi chạy `./scripts/migrate.sh` (an toàn khi chạy nhiều lần). Sau mỗi lần `git pull` cũng chạy lại lệnh này. Chi tiết và ví dụ: `db/migrations/README.md`. Trên web thật, `deploy.sh` tự áp sau khi merge vào `main`.
