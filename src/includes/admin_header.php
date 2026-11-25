@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/ui.php';
 require_admin(); // chặn người không phải admin (xem config/db.php)
+$isAdminArea = true; // footer.php sẽ ẩn chân trang cửa hàng
 
 $nav = [
     'Dashboard' => '/admin/index.php',

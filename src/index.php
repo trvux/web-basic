@@ -37,7 +37,13 @@ $products = $stmt->fetchAll();
 // Banner do admin quản lý ở admin/banners/. Chỉ hiện ở trang đầu, khi không lọc.
 $slides = [];
 if ($page === 1 && !$cat && $q === '') {
-    $banners = $pdo->query('SELECT * FROM banners WHERE is_active = 1 ORDER BY sort_order, id DESC')->fetchAll();
+    try {
+        $banners = $pdo->query('SELECT * FROM banners WHERE is_active = 1 ORDER BY sort_order, id DESC')->fetchAll();
+    } catch (PDOException $ex) {
+        // Chưa chạy ./scripts/migrate.sh thì chưa có bảng: bỏ qua banner, ghi log, trang chủ vẫn chạy
+        error_log($ex->getMessage());
+        $banners = [];
+    }
     foreach ($banners as $banner) {
         $slide = '<img src="/uploads/banners/' . e(rawurlencode(basename($banner['image']))) . '" alt="' . e($banner['title'])
                . '" class="aspect-[3/1] w-full bg-muted object-cover">';

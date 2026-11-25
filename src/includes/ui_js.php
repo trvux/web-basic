@@ -5,7 +5,15 @@
 
   // Mở / đóng dialog, sheet, drawer: data-open="id" mở, bấm ra nền ngoài thì đóng
   $$('[data-open]').forEach(b => b.addEventListener('click', () => document.getElementById(b.dataset.open)?.showModal()));
-  $$('dialog:not([role="alertdialog"])').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
+  const outside = (d, e) => {
+    const r = d.getBoundingClientRect();
+    return e.target === d && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom);
+  };
+  $$('dialog:not([role="alertdialog"])').forEach(d => {
+    let startedOutside = false; // bôi đen chữ rồi thả ra ngoài thì không đóng
+    d.addEventListener('mousedown', e => startedOutside = outside(d, e));
+    d.addEventListener('click', e => { if (startedOutside && outside(d, e)) d.close(); });
+  });
 
   // Dropdown, popover, menubar: bấm ra ngoài hoặc nhấn Esc thì đóng
   const menus = () => $$('details[data-menu][open]');
@@ -51,8 +59,17 @@
   // Input OTP
   $$('[data-otp]').forEach(box => {
     const hidden = box.querySelector('input[type="hidden"]'), cells = $$('input[type="text"]', box);
+    const sync = () => hidden.value = cells.map(c => c.value).join('');
     cells.forEach((cell, i) => {
-      cell.addEventListener('input', () => { cell.value = cell.value.replace(/\D/g, ''); if (cell.value) cells[i + 1]?.focus(); hidden.value = cells.map(c => c.value).join(''); });
+      cell.addEventListener('focus', () => cell.select());
+      cell.addEventListener('paste', e => {
+        e.preventDefault();
+        const digits = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, cells.length - i);
+        [...digits].forEach((d, k) => cells[i + k].value = d);
+        cells[Math.min(i + digits.length, cells.length - 1)].focus();
+        sync();
+      });
+      cell.addEventListener('input', () => { cell.value = cell.value.replace(/\D/g, ''); if (cell.value) cells[i + 1]?.focus(); sync(); });
       cell.addEventListener('keydown', e => { if (e.key === 'Backspace' && !cell.value) cells[i - 1]?.focus(); });
     });
   });

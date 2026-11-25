@@ -19,7 +19,7 @@ if (!$p) http_response_code(404);
     <a href="/index.php" class="<?= ui_btn('outline') ?> mt-3">Về trang chủ</a>
   </div>
 <?php else: ?>
-  <?= ui_breadcrumb(['Trang chủ' => '/index.php', $p['name'] => null]) ?>
+  <?= ui_breadcrumb(['Trang chủ' => '/index.php'], $p['name']) ?>
   <div class="grid items-start gap-6 md:grid-cols-2">
     <img src="<?= e($p['image']) ?>" alt="<?= e($p['name']) ?>" class="aspect-square w-full rounded-xl bg-card object-cover ring-1 ring-foreground/10">
     <div class="grid gap-3">

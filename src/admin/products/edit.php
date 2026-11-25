@@ -7,7 +7,9 @@ $stmt->execute([$id]);
 $product = $stmt->fetch();
 
 if (!$product) {
-    die('Không tìm thấy sản phẩm');
+    echo '<div class="' . UI_EMPTY . '">Không tìm thấy sản phẩm</div>';
+    require __DIR__ . '/../../includes/footer.php';
+    exit;
 }
 
 $categories = $pdo->query('SELECT * FROM categories')->fetchAll();

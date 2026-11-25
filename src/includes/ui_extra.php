@@ -87,7 +87,7 @@ function ui_carousel($slides, $auto = 0) {
     foreach ($slides as $s) $html .= '<div class="min-w-0 shrink-0 grow-0 basis-full snap-start">' . $s . '</div>';
     $html .= '</div>';
     if (count($slides) > 1) {
-        $btn = ui_btn('outline', 'sm') . ' absolute top-1/2 -translate-y-1/2 rounded-full!';
+        $btn = ui_btn('outline', 'sm') . ' absolute! inset-y-0 my-auto rounded-full!';
         $html .= '<button type="button" class="' . $btn . ' left-2" data-prev aria-label="Trước">‹</button>'
                . '<button type="button" class="' . $btn . ' right-2" data-next aria-label="Sau">›</button>';
     }
@@ -125,7 +125,8 @@ const UI_CONTEXT_MENU = 'fixed z-50 hidden min-w-36 rounded-md bg-popover p-1 te
 function ui_input_otp($name, $length = 6) {
     $html = '<div class="flex items-center" data-otp><input type="hidden" name="' . ui_attr($name) . '">';
     for ($i = 0; $i < $length; $i++) {
-        $html .= '<input class="size-9 border-y border-r border-input bg-background text-center text-sm shadow-xs outline-none first-of-type:rounded-l-md first-of-type:border-l last-of-type:rounded-r-md focus:ring-3 focus:ring-ring/50" type="text" inputmode="numeric" maxlength="1" aria-label="Số thứ ' . ($i + 1) . '">';
+        $edge = ($i === 0 ? ' rounded-l-md border-l' : '') . ($i === $length - 1 ? ' rounded-r-md' : '');
+        $html .= '<input class="size-9 border-y border-r border-input bg-background text-center text-sm shadow-xs outline-none focus:ring-3 focus:ring-ring/50' . $edge . '" type="text" inputmode="numeric" maxlength="1" aria-label="Số thứ ' . ($i + 1) . '">';
     }
     return $html . '</div>';
 }

@@ -13,7 +13,7 @@ if (!$post) http_response_code(404);
     <a href="index.php" class="<?= ui_btn('outline') ?> mt-3">Về trang tin tức</a>
   </div>
 <?php else: ?>
-  <?= ui_breadcrumb(['Trang chủ' => '/index.php', 'Tin tức' => '/posts/index.php', $post['title'] => null]) ?>
+  <?= ui_breadcrumb(['Trang chủ' => '/index.php', 'Tin tức' => '/posts/index.php'], $post['title']) ?>
   <article class="mx-auto grid max-w-3xl gap-4">
     <h1 class="text-3xl font-semibold tracking-tight"><?= e($post['title']) ?></h1>
     <span class="text-sm text-muted-foreground"><?= e(date('d/m/Y', strtotime($post['created_at']))) ?></span>

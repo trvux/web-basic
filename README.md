@@ -31,9 +31,10 @@ Các file `.sql` trong `db/` chỉ chạy **lần đầu**, khi volume DB còn t
 ```bash
 docker compose down -v   # -v xoá luôn dữ liệu
 docker compose up -d
+./scripts/migrate.sh     # BẮT BUỘC sau khi reset: tạo các bảng/cột mới (banners, posts...)
 ```
 
-> Đã `git pull` mà thấy bảng mới của người khác chưa có? Chạy lệnh reset ở trên.
+> Đã `git pull` mà thấy bảng mới của người khác chưa có? Chạy `./scripts/migrate.sh`.
 
 ## 2. Cấu trúc thư mục
 
@@ -192,6 +193,7 @@ python3 scripts/download_images.py      # tải ảnh      -> src/uploads/produc
 python3 scripts/normalize_data.py       # chuẩn hóa    -> data/laptops_clean.json
 python3 scripts/build_seed_sql.py       # sinh SQL     -> db/seed-products.sql
 docker compose down -v && docker compose up -d   # nạp lại vào DB
+./scripts/migrate.sh
 ```
 
 Bảng: `products` (có các cột lọc như `ram_gb`, `ssd_gb`, `screen_inch`, `brand`...) và `product_specs` (bảng thông số đầy đủ, mỗi dòng một thông số).

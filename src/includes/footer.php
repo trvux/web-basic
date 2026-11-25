@@ -1,4 +1,5 @@
 </main>
+<?php if (empty($isAdminArea)): ?>
 <footer class="mt-8 border-t bg-card">
   <div class="mx-auto grid w-full max-w-6xl gap-6 px-4 py-8 text-sm sm:grid-cols-3">
     <div class="grid content-start gap-2">
@@ -20,6 +21,7 @@
   </div>
   <div class="border-t py-3 text-center text-xs text-muted-foreground">© <?= date('Y') ?> LaptopShop</div>
 </footer>
+<?php endif; ?>
 <?php require __DIR__ . '/ui_js.php'; ?>
 </body>
 </html>

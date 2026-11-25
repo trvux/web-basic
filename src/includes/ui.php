@@ -141,11 +141,15 @@ const UI_AVATAR_IMG = 'aspect-square size-full rounded-full object-cover';
 const UI_AVATAR_FALLBACK = 'flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground';
 
 // ---------- Breadcrumb ----------
-// Dùng: echo ui_breadcrumb(['Trang chủ' => '/index.php', 'Sản phẩm' => '/products/index.php', 'Chi tiết' => null]);
-function ui_breadcrumb($items) {
+// Dùng: echo ui_breadcrumb(['Trang chủ' => '/index.php', 'Sản phẩm' => '/products/index.php'], 'Tên trang hiện tại');
+// Trang hiện tại truyền riêng để tiêu đề trùng nhãn cố định không đè mất link.
+function ui_breadcrumb($items, $current = null) {
     $html = '<nav class="mb-4"><ol class="flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5">';
+    $list = [];
+    foreach ($items as $label => $href) $list[] = [$label, $href];
+    if ($current !== null) $list[] = [$current, null];
     $i = 0;
-    foreach ($items as $label => $href) {
+    foreach ($list as [$label, $href]) {
         if ($i++ > 0) $html .= '<li aria-hidden="true">›</li>';
         $text = htmlspecialchars((string)$label, ENT_QUOTES, 'UTF-8');
         $html .= '<li class="inline-flex items-center gap-1.5">' . ($href === null
