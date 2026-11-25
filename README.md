@@ -26,7 +26,7 @@ Tắt: `docker compose down`
 **Sửa code PHP xong chỉ cần F5 trình duyệt**, không cần build lại (thư mục `src/` được mount thẳng vào container).
 
 ### Reset database
-Các file `.sql` trong `db/` chỉ chạy **lần đầu**, khi volume DB còn trống: `init.sql` (bảng, tài khoản, danh mục) rồi `seed-products.sql` (100 laptop, **không có trong git**, xem mục 8). Nếu sửa cấu trúc bảng hoặc muốn DB sạch lại:
+Các file `.sql` trong `db/` chỉ chạy **lần đầu**, khi volume DB còn trống: `init.sql` (bảng, tài khoản, danh mục) rồi `seed-products.sql` (100 laptop, **không có trong git**, xem mục 9). Nếu sửa cấu trúc bảng hoặc muốn DB sạch lại:
 
 ```bash
 docker compose down -v   # -v xoá luôn dữ liệu
@@ -53,7 +53,7 @@ src/
   cart/              giỏ hàng (session) + đặt hàng
   orders/            đơn hàng của tôi (khách)
 db/init.sql          tạo bảng, tài khoản test, danh mục
-db/seed-products.sql 100 laptop (TỰ SINH, không commit - xem mục 8)
+db/seed-products.sql 100 laptop (TỰ SINH, không commit - xem mục 9)
 data/                dữ liệu crawl từ gearvn.com (không commit)
 scripts/             crawl_gearvn.py -> download_images.py -> normalize_data.py -> build_seed_sql.py
 src/uploads/products ảnh sản phẩm (không commit)
@@ -61,41 +61,54 @@ src/uploads/products ảnh sản phẩm (không commit)
 Tài khoản test (**chỉ có trên máy dev**, bản chạy thật dùng mật khẩu khác): `admin / admin123` (admin), `user / user123` (khách)
 ```
 
-## 3. Phân công
+## 3. Phân công (hạn chốt: **28/11**)
 
-| Ai | Việc | Thư mục |
+Nền đã xong (đăng ký/đăng nhập, giỏ hàng, đặt hàng, CRUD sản phẩm + danh mục, xem đơn). Giờ mỗi người làm **tính năng mới trong thư mục riêng của mình**. Chi tiết từng việc, tiêu chí xong và lịch 3 ngày: [`docs/BACKLOG.md`](docs/BACKLOG.md).
+
+| Ai | Việc chính | Được sửa |
 |---|---|---|
-| A (leader) | Setup, CRUD sản phẩm, merge code, báo cáo | `admin/products/` |
-| B | CRUD danh mục | `admin/categories/` |
-| C | Đăng ký / đăng nhập / đăng xuất | `auth/` |
-| D | Giỏ hàng (dùng session) | `cart/` + nút trong `index.php` |
+| **Huy** (leader) | XAMPP, free host, rà bảo mật, slide, merge | mọi nơi (file chung: `includes/`, `config/`, `db/`, `src/index.php`) |
+| **Minh** | Danh sách SP (tìm kiếm, lọc, sắp xếp, phân trang), chi tiết SP | `src/products/` |
+| **Phong** | Quản lý người dùng, đổi trạng thái đơn, dashboard | `src/admin/users/`, `src/admin/orders/`, `src/admin/index.php` |
+| **Phúc** | Quản lý banner, bài viết, validate giỏ hàng | `src/admin/banners/`, `src/admin/posts/`, `src/account/`, `src/orders/` |
 
-Mỗi file stub đã có comment `TODO` ghi rõ các bước. **Cách học nhanh nhất: mở `src/admin/products/` ra đọc, copy rồi sửa.**
+Ai cũng được thêm file mới trong `db/migrations/`. **CI tự báo đỏ nếu PR sửa file ngoài phần của mình**, nên hai người không thể sửa chung một file. Cần sửa file chung thì nhắn Huy, Huy sửa giúp.
 
-Mỗi người làm trong thư mục riêng nên gần như không bị conflict.
+**Cách học nhanh nhất: mở `src/admin/products/` ra đọc, copy rồi sửa.**
 
 ## 4. Quy trình Git (mỗi người làm)
 
-**Nguyên tắc: không ai push thẳng vào `main`.** `main` tự deploy lên web.phren.dev, code lỗi là lên thẳng web thật. Mọi thứ đi qua Pull Request, leader duyệt và bấm merge.
+**Không ai push thẳng vào `main`** (GitHub chặn). `main` tự deploy lên web.phren.dev, code lỗi là lên thẳng web thật. Mọi thứ đi qua Pull Request, **Huy review rồi mới merge**. PR phải: CI xanh + được Huy duyệt + nhánh đã cập nhật theo `main` mới nhất.
+
+### Luật sống còn: luôn làm trên code MỚI NHẤT
+
+Lỗi hay gặp: A làm xong và được merge, B vẫn làm tiếp trên bản cũ ở máy mình rồi mở PR, kết quả là conflict hoặc ghi đè code của A. Cách tránh:
+
+1. **Bắt đầu việc mới = dùng script**, nó tự kéo `main` mới nhất rồi mới tách nhánh:
+   ```bash
+   ./scripts/start-work.sh feature/ten-viec     # vd: feature/product-filter
+   ```
+2. **Mỗi khi có PR của ai đó được merge** (Huy sẽ nhắn trong nhóm), và **trước khi mở PR**, cập nhật nhánh của mình:
+   ```bash
+   ./scripts/sync-branch.sh
+   ```
+3. GitHub sẽ **không cho merge** nếu nhánh của mình cũ hơn `main`. Thấy nút "Update branch" hoặc "This branch is out-of-date" thì chạy lại lệnh ở bước 2 rồi `git push`.
+
+Sau khi PR được merge: nhánh đó bỏ, việc tiếp theo tạo nhánh mới bằng `start-work.sh` (đừng dùng lại nhánh cũ).
+
+### Các bước mỗi việc
 
 ```bash
-# 1. Đầu mỗi buổi làm: kéo main mới nhất rồi tách nhánh MỚI cho việc của mình
-git checkout main
-git pull origin main
-./scripts/migrate.sh              # áp thay đổi DB của người khác (nếu có)
-git checkout -b feature/ten-viec  # vd: feature/categories
-
-# 2. Code, test trên localhost:8088, commit thường xuyên
-git add .
-git commit -m "Thêm CRUD danh mục"
-
-# 3. Đẩy nhánh lên và tạo Pull Request vào main
-git push -u origin feature/ten-viec
+./scripts/start-work.sh feature/ten-viec   # 1. kéo main mới + tách nhánh
+# 2. code, test trên localhost:8088, commit thường xuyên
+git add . && git commit -m "Thêm lọc sản phẩm theo hãng"
+./scripts/sync-branch.sh                   # 3. kéo main mới vào nhánh trước khi đẩy
+git push -u origin feature/ten-viec        # 4. đẩy nhánh, rồi mở Pull Request vào main trên GitHub
 ```
 
-**PR nhỏ, merge sớm.** Một PR = một việc nhỏ làm xong trong 1-2 ngày. Nhánh để càng lâu thì conflict càng to.
+**PR nhỏ, merge sớm.** Một PR = một việc nhỏ, làm xong trong vài giờ. Nhánh để càng lâu thì càng dễ conflict. Chỉ có 3 ngày, nên mỗi người mở PR **ít nhất 1 lần mỗi ngày**.
 
-**Chỉ sửa file trong thư mục việc của mình (mục 3).** File dùng chung (`src/includes/header.php`, `ui.php`, `src/index.php`, `db/init.sql`) chỉ leader sửa; cần gì thì nhắn leader. Hai người sửa cùng một file là nguyên nhân gây conflict.
+**Chỉ sửa file trong phần của mình (mục 3).** CI kiểm tra tự động.
 
 ### Khi GitHub báo "This branch has conflicts"
 
@@ -124,7 +137,26 @@ git push
 
 Không biết gỡ thì **nhắn leader, đừng xóa đại code của người khác.** Không bao giờ dùng `git push --force`.
 
-## 5. Luật code (để khỏi bị lỗi/bị trừ điểm)
+## 5. Giao diện: BẮT BUỘC dùng bộ shadcn có sẵn
+
+Giao diện đã được chuyển từ shadcn/ui sang PHP + Tailwind, nằm sẵn trong **`src/includes/ui.php`** và theme đỏ trong `src/includes/head.php`. **Mọi trang mới phải dùng, không tự viết class riêng.** Làm sai thì giao diện mỗi trang một kiểu, mất điểm tiêu chí "giao diện đẹp" (3đ).
+
+| Cần | Dùng |
+|---|---|
+| Nút | `class="<?= ui_btn() ?>"`, biến thể `ui_btn('outline')`, `'destructive'`, `'secondary'`, `'ghost'`; cỡ `ui_btn('default', 'sm')` |
+| Ô nhập, nhãn, nhóm trường | `UI_INPUT`, `UI_TEXTAREA`, `UI_LABEL`, `UI_FIELD` |
+| Thẻ (card) | `UI_CARD`, `UI_CARD_HEADER`, `UI_CARD_TITLE`, `UI_CARD_CONTENT` |
+| Bảng | `UI_TABLE_WRAP`, `UI_TABLE`, `UI_TR`, `UI_TH`, `UI_TD` |
+| Nhãn nhỏ | `ui_badge()` |
+| Thông báo lỗi, tiêu đề, khung trang | `UI_ALERT_ERROR`, `UI_H1`, `UI_PAGE` |
+
+**Cấm:** màu Tailwind viết cứng như `bg-red-600`, `text-gray-800`, `border-gray-300`. Cần màu thì dùng token của theme: `bg-primary`, `text-muted-foreground`, `bg-muted`, `border-border`, `text-destructive`.
+
+**Mẫu để copy:** `src/admin/products/` (trang admin: bảng, form) và `src/index.php` (trang khách).
+
+Thiếu component (ví dụ select, phân trang, alert thành công)? **Nhắn Huy thêm vào `ui.php`**, đừng tự viết trong trang của mình. CI tự báo đỏ nếu PR có màu viết cứng.
+
+## 6. Luật code (để khỏi bị lỗi/bị trừ điểm)
 
 1. Query SQL luôn dùng `prepare()` + `execute([...])`, **không** nối biến vào chuỗi SQL.
 2. In dữ liệu ra HTML luôn bọc `e(...)`: `<?= e($row['name']) ?>`
@@ -132,7 +164,7 @@ Không biết gỡ thì **nhắn leader, đừng xóa đại code của người
 4. Mỗi trang PHP bắt đầu bằng `require_once` header, kết thúc bằng footer (xem file mẫu).
 5. Kết nối DB host là `db`, không phải `localhost`.
 
-## 6. Tài khoản trên web thật (web.phren.dev)
+## 7. Tài khoản trên web thật (web.phren.dev)
 
 Tài khoản được tạo thẳng trong DB trên VPS (không commit vào git). Leader thêm người mới bằng:
 
@@ -144,11 +176,11 @@ Tài khoản được tạo thẳng trong DB trên VPS (không commit vào git).
 
 Caddy của project này cũng phục vụ các subdomain khác của `phren.dev` (ví dụ `reperi.phren.dev`): mỗi sản phẩm tự thả một file `<tên>.caddy` vào `/opt/phren-hub/sites` trên VPS, nên **không cần sửa `Caddyfile` ở đây** khi có sản phẩm mới.
 
-## 7. Thay đổi cấu trúc DB (migration)
+## 8. Thay đổi cấu trúc DB (migration)
 
 **Không sửa `db/init.sql`** (nó chỉ tạo DB mới lần đầu, và là file dễ conflict nhất). Cần thêm bảng/cột thì tạo file mới `db/migrations/YYYY-MM-DD-ten-viec.sql`, rồi chạy `./scripts/migrate.sh` (an toàn khi chạy nhiều lần). Sau mỗi lần `git pull` cũng chạy lại lệnh này. Chi tiết và ví dụ: `db/migrations/README.md`. Trên web thật, `deploy.sh` tự áp sau khi merge vào `main`.
 
-## 8. Dữ liệu sản phẩm (laptop từ gearvn.com)
+## 9. Dữ liệu sản phẩm (laptop từ gearvn.com)
 
 Sản phẩm, ảnh, thông số, bài viết lấy từ [gearvn.com](https://gearvn.com/collections/laptop) làm dữ liệu mẫu cho đồ án (nguồn từng sản phẩm lưu ở cột `products.source_url`). **Repo này public nên dữ liệu và ảnh không nằm trong git**: chỉ có script. Để có dữ liệu ở máy mình, nhận gói dữ liệu từ nhóm trưởng (giải nén vào `data/`, `src/uploads/products/`, `db/seed-products.sql`) hoặc tự chạy theo thứ tự (chỉ cần Python 3, mất vài phút):
 

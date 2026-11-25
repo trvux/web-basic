@@ -26,12 +26,30 @@ jobs:
             grep -v "^No syntax errors" /tmp/lint.txt
             exit $rc'
 
+      - name: Giao diện phải dùng bộ shadcn (ui.php), không màu Tailwind viết cứng
+        run: ./scripts/check-ui.sh
+
       - name: Không có "?>" trong comment (sẽ làm PHP thoát chế độ code giữa chừng)
         run: |
           if grep -rnE '^\s*(//|#).*\?>' src --include='*.php'; then
             echo "::error::Có comment chứa ?> - xoá hoặc viết lại comment đó"
             exit 1
           fi
+
+  ownership:
+    name: Chỉ sửa đúng thư mục của mình
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Kiểm tra file đã sửa thuộc phần của tác giả PR
+        env:
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          BASE: origin/${{ github.base_ref }}
+        run: ./scripts/check-ownership.sh
 
   deploy:
     name: Deploy lên web.phren.dev
