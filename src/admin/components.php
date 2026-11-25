@@ -4,7 +4,6 @@
 require_once __DIR__ . '/../includes/admin_header.php';
 ?>
 
-<?= ui_breadcrumb(['Dashboard' => '/admin/index.php', 'Component' => null]) ?>
 <h1 class="<?= UI_H1 ?>">Component giao diện</h1>
 
 <div class="grid items-start gap-4 md:grid-cols-2">
@@ -82,7 +81,7 @@ require_once __DIR__ . '/../includes/admin_header.php';
         <details class="<?= UI_ACCORDION_ITEM ?>"><summary class="<?= UI_ACCORDION_TRIGGER ?>">Giao hàng thế nào?</summary><div class="<?= UI_ACCORDION_CONTENT ?>">Giao tận nơi.</div></details>
       </div>
       <div class="flex gap-2">
-        <details class="<?= UI_DROPDOWN ?>">
+        <details class="<?= UI_DROPDOWN ?>" data-menu>
           <summary class="<?= ui_btn('outline') ?>">Menu</summary>
           <div class="<?= UI_DROPDOWN_CONTENT ?> left-0 right-auto">
             <div class="<?= UI_DROPDOWN_LABEL ?>">Hành động</div>
@@ -122,6 +121,95 @@ require_once __DIR__ . '/../includes/admin_header.php';
         </table>
       </div>
       <?= ui_pagination((int)($_GET['page'] ?? 1), 8) ?>
+    </div>
+  </section>
+
+  <section class="<?= UI_CARD ?> overflow-visible!">
+    <div class="<?= UI_CARD_HEADER ?>"><div class="<?= UI_CARD_TITLE ?>">Carousel, aspect ratio</div><div class="<?= UI_CARD_DESC ?>">ui_carousel(), UI_ASPECT_VIDEO</div></div>
+    <div class="<?= UI_CARD_CONTENT ?>">
+      <?= ui_carousel([
+        '<div class="' . UI_ASPECT_VIDEO . ' flex items-center justify-center">Slide 1</div>',
+        '<div class="' . UI_ASPECT_VIDEO . ' flex items-center justify-center">Slide 2</div>',
+      ], 5) ?>
+    </div>
+  </section>
+
+  <section class="<?= UI_CARD ?> overflow-visible!">
+    <div class="<?= UI_CARD_HEADER ?>"><div class="<?= UI_CARD_TITLE ?>">Popover, tooltip, hover card, collapsible</div><div class="<?= UI_CARD_DESC ?>">details + group-hover</div></div>
+    <div class="<?= UI_CARD_CONTENT ?>">
+      <div class="flex flex-wrap items-center gap-2">
+        <details class="<?= UI_POPOVER ?>" data-menu><summary class="<?= ui_btn('outline') ?>">Popover</summary><div class="<?= UI_POPOVER_CONTENT ?>">Nội dung popover.</div></details>
+        <span class="<?= UI_HOVER_WRAP ?>"><button type="button" class="<?= ui_btn('outline') ?>">Tooltip</button><span class="<?= UI_TOOLTIP ?>" role="tooltip">Gợi ý ngắn</span></span>
+        <span class="<?= UI_HOVER_WRAP ?>"><a href="#" class="<?= ui_btn('link') ?>">Hover card</a><span class="<?= UI_HOVER_CARD ?>">Thông tin chi tiết khi rê chuột.</span></span>
+      </div>
+      <details class="<?= UI_COLLAPSIBLE ?>"><summary class="<?= UI_COLLAPSIBLE_TRIGGER ?>">Xem thêm ▾</summary><div class="<?= UI_ITEM_MUTED ?>">Phần được ẩn.</div></details>
+    </div>
+  </section>
+
+  <section class="<?= UI_CARD ?> overflow-visible!">
+    <div class="<?= UI_CARD_HEADER ?>"><div class="<?= UI_CARD_TITLE ?>">Sheet, drawer, alert dialog, toast</div><div class="<?= UI_CARD_DESC ?>">Mở bằng data-open="id"</div></div>
+    <div class="<?= UI_CARD_CONTENT ?>">
+      <div class="flex flex-wrap gap-2">
+        <button type="button" class="<?= ui_btn('outline') ?>" data-open="demo-sheet">Sheet</button>
+        <button type="button" class="<?= ui_btn('outline') ?>" data-open="demo-drawer">Drawer</button>
+        <button type="button" class="<?= ui_btn('destructive') ?>" data-open="demo-alert">Alert dialog</button>
+        <a href="?toast=1" class="<?= ui_btn('outline') ?>">Toast</a>
+      </div>
+      <?php if (isset($_GET['toast'])) echo ui_toast('Đã lưu thành công'); ?>
+      <dialog id="demo-sheet" class="<?= UI_SHEET_RIGHT ?>"><div class="<?= UI_DIALOG_TITLE ?>">Sheet</div><form method="dialog" class="<?= UI_SHEET_FOOTER ?>"><button class="<?= ui_btn('outline') ?>">Đóng</button></form></dialog>
+      <dialog id="demo-drawer" class="<?= UI_DRAWER ?>"><div class="<?= UI_DIALOG_TITLE ?>">Drawer</div><form method="dialog"><button class="<?= ui_btn('outline') ?>">Đóng</button></form></dialog>
+      <dialog id="demo-alert" role="alertdialog" class="<?= UI_DIALOG ?>"><div class="<?= UI_DIALOG_TITLE ?>">Chắc chưa?</div><form method="dialog" class="<?= UI_DIALOG_FOOTER ?>"><button class="<?= ui_btn('outline') ?>">Huỷ</button><button class="<?= ui_btn('destructive') ?>">Đồng ý</button></form></dialog>
+    </div>
+  </section>
+
+  <section class="<?= UI_CARD ?> overflow-visible!">
+    <div class="<?= UI_CARD_HEADER ?>"><div class="<?= UI_CARD_TITLE ?>">Toggle, slider, combobox, OTP</div><div class="<?= UI_CARD_DESC ?>">Nhập liệu</div></div>
+    <div class="<?= UI_CARD_CONTENT ?>">
+      <label class="<?= UI_TOGGLE ?> w-fit"><input type="checkbox" class="<?= UI_TOGGLE_INPUT ?>">Yêu thích</label>
+      <div class="<?= UI_TOGGLE_GROUP ?>"><?php foreach (['Lưới', 'Danh sách'] as $i => $t): ?><label class="<?= UI_TOGGLE ?>"><input type="radio" name="view" class="<?= UI_TOGGLE_INPUT ?>" <?= $i === 0 ? 'checked' : '' ?>><?= $t ?></label><?php endforeach; ?></div>
+      <input type="range" class="<?= UI_SLIDER ?>" aria-label="Giá">
+      <?= ui_combobox('hang', ['Asus', 'Dell', 'HP', 'Lenovo'], '', 'Chọn hoặc gõ hãng') ?>
+      <?= ui_input_otp('otp') ?>
+    </div>
+  </section>
+
+  <section class="<?= UI_CARD ?> overflow-visible!">
+    <div class="<?= UI_CARD_HEADER ?>"><div class="<?= UI_CARD_TITLE ?>">Menubar, context menu, command</div><div class="<?= UI_CARD_DESC ?>">Điều hướng</div></div>
+    <div class="<?= UI_CARD_CONTENT ?>">
+      <div class="<?= UI_MENUBAR ?>"><details class="<?= UI_DROPDOWN ?>" data-menu><summary class="<?= UI_MENUBAR_TRIGGER ?>">Tệp</summary><div class="<?= UI_DROPDOWN_CONTENT ?> left-0 right-auto"><a href="#" class="<?= UI_DROPDOWN_ITEM ?>">Mới</a></div></details><a href="#" class="<?= UI_MENUBAR_TRIGGER ?>">Trợ giúp</a></div>
+      <nav class="<?= UI_NAV_MENU ?>"><a href="#" class="<?= UI_NAV_LINK ?>">Laptop</a><a href="#" class="<?= UI_NAV_LINK ?>">Phụ kiện</a></nav>
+      <div class="<?= UI_EMPTY ?>" data-context="demo-context">Bấm chuột phải vào đây</div>
+      <div id="demo-context" class="<?= UI_CONTEXT_MENU ?>" data-context-menu><a href="#" class="<?= UI_DROPDOWN_ITEM ?>">Sao chép</a></div>
+      <?= ui_command(['Sản phẩm' => '/admin/products/index.php', 'Danh mục' => '/admin/categories/index.php', 'Đơn hàng' => '/admin/orders/index.php']) ?>
+    </div>
+  </section>
+
+  <section class="<?= UI_CARD ?> overflow-visible!">
+    <div class="<?= UI_CARD_HEADER ?>"><div class="<?= UI_CARD_TITLE ?>">Sidebar, item, scroll area, resizable</div><div class="<?= UI_CARD_DESC ?>">Bố cục</div></div>
+    <div class="<?= UI_CARD_CONTENT ?>">
+      <div class="<?= UI_SIDEBAR_LAYOUT ?>"><aside class="<?= UI_SIDEBAR ?> md:w-40"><div class="<?= UI_SIDEBAR_LABEL ?>">Menu</div><a href="#" class="<?= ui_sidebar_link(true) ?>">Tổng quan</a><a href="#" class="<?= ui_sidebar_link() ?>">Cài đặt</a></aside><div class="<?= UI_SIDEBAR_CONTENT ?>"><div class="<?= UI_ITEM ?>"><div class="<?= UI_ITEM_CONTENT ?>"><div class="<?= UI_ITEM_TITLE ?>">Đơn #12</div><div class="<?= UI_ITEM_DESC ?>">2 sản phẩm</div></div><div class="<?= UI_ITEM_ACTIONS ?>"><button type="button" class="<?= ui_btn('outline', 'sm') ?>">Xem</button></div></div></div></div>
+      <div class="<?= UI_SCROLL_AREA ?> h-24 p-3"><?php for ($i = 1; $i <= 12; $i++) echo "<div>Dòng $i</div>"; ?></div>
+      <div class="<?= UI_RESIZABLE ?>">Kéo góc phải dưới để đổi cỡ</div>
+    </div>
+  </section>
+
+  <section class="<?= UI_CARD ?> overflow-visible!">
+    <div class="<?= UI_CARD_HEADER ?>"><div class="<?= UI_CARD_TITLE ?>">Calendar, chart</div><div class="<?= UI_CARD_DESC ?>">ui_calendar(), ui_bar_chart()</div></div>
+    <div class="<?= UI_CARD_CONTENT ?>">
+      <?= ui_calendar() ?>
+      <?= ui_bar_chart(['T7' => 4, 'T8' => 9, 'T9' => 6, 'T10' => 12], ' đơn') ?>
+    </div>
+  </section>
+
+  <section class="<?= UI_CARD ?> overflow-visible!">
+    <div class="<?= UI_CARD_HEADER ?>"><div class="<?= UI_CARD_TITLE ?>">Chat</div><div class="<?= UI_CARD_DESC ?>">Message, bubble, marker, attachment</div></div>
+    <div class="<?= UI_CARD_CONTENT ?>">
+      <div class="<?= UI_MESSAGE_SCROLLER ?>"><div class="<?= UI_MESSAGE_LIST ?>">
+        <div class="<?= UI_MARKER ?>">Hôm nay</div>
+        <div class="<?= UI_MESSAGE ?>"><div class="<?= UI_BUBBLE ?>">Shop còn hàng không?</div></div>
+        <div class="<?= UI_MESSAGE_END ?>"><div class="<?= UI_BUBBLE_PRIMARY ?>">Còn bạn nhé.</div></div>
+        <a href="#" class="<?= UI_ATTACHMENT ?>">bao-gia.pdf</a>
+      </div></div>
     </div>
   </section>
 

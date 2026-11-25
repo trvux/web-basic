@@ -12,6 +12,8 @@ services:
       DB_PASS: ${DB_PASS}
     volumes:
       - ./docker/php-prod.ini:/usr/local/etc/php/conf.d/zz-prod.ini:ro
+      # Ảnh upload nằm trên đĩa VPS, không mất khi build lại image
+      - ./src/uploads:/var/www/html/uploads
     depends_on:
       - db
 

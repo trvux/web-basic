@@ -7,7 +7,9 @@ $stmt->execute([$id]);
 $category = $stmt->fetch();
 
 if (!$category) {
-    die('Không tìm thấy danh mục');
+    echo '<div class="' . UI_EMPTY . '">Không tìm thấy danh mục</div>';
+    require __DIR__ . '/../../includes/footer.php';
+    exit;
 }
 
 $error = '';

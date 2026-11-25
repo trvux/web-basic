@@ -31,9 +31,10 @@ Các file `.sql` trong `db/` chỉ chạy **lần đầu**, khi volume DB còn t
 ```bash
 docker compose down -v   # -v xoá luôn dữ liệu
 docker compose up -d
+./scripts/migrate.sh     # BẮT BUỘC sau khi reset: tạo các bảng/cột mới (banners, posts...)
 ```
 
-> Đã `git pull` mà thấy bảng mới của người khác chưa có? Chạy lệnh reset ở trên.
+> Đã `git pull` mà thấy bảng mới của người khác chưa có? Chạy `./scripts/migrate.sh`.
 
 ## 2. Cấu trúc thư mục
 
@@ -67,10 +68,10 @@ Nền đã xong (đăng ký/đăng nhập, giỏ hàng, đặt hàng, CRUD sản
 
 | Ai | Việc chính | Được sửa |
 |---|---|---|
-| **Huy** (leader) | XAMPP, free host, rà bảo mật, slide, merge | mọi nơi (file chung: `includes/`, `config/`, `db/`, `src/index.php`) |
+| **Huy** (leader) | Trang chủ, tin tức, deploy VPS, rà bảo mật, slide, merge | mọi nơi (file chung: `includes/`, `config/`, `db/`, `src/index.php`, `src/posts/`) |
 | **Minh** | Danh sách SP (tìm kiếm, lọc, sắp xếp, phân trang), chi tiết SP | `src/products/` |
 | **Phong** | Quản lý người dùng, đổi trạng thái đơn, dashboard | `src/admin/users/`, `src/admin/orders/`, `src/admin/index.php` |
-| **Phúc** | Quản lý banner, bài viết, validate giỏ hàng | `src/admin/banners/`, `src/admin/posts/`, `src/account/`, `src/orders/`, `src/cart/` |
+| **Phúc** | Quản lý banner, bài viết (ảnh lưu `src/uploads/banners`, `src/uploads/posts`), validate giỏ hàng | `src/admin/banners/`, `src/admin/posts/`, `src/account/`, `src/orders/`, `src/cart/` |
 
 Ai cũng được thêm file mới trong `db/migrations/`. **CI tự báo đỏ nếu PR sửa file ngoài phần của mình**, nên hai người không thể sửa chung một file. Cần sửa file chung thì nhắn Huy, Huy sửa giúp.
 
@@ -192,6 +193,7 @@ python3 scripts/download_images.py      # tải ảnh      -> src/uploads/produc
 python3 scripts/normalize_data.py       # chuẩn hóa    -> data/laptops_clean.json
 python3 scripts/build_seed_sql.py       # sinh SQL     -> db/seed-products.sql
 docker compose down -v && docker compose up -d   # nạp lại vào DB
+./scripts/migrate.sh
 ```
 
 Bảng: `products` (có các cột lọc như `ram_gb`, `ssd_gb`, `screen_inch`, `brand`...) và `product_specs` (bảng thông số đầy đủ, mỗi dòng một thông số).
