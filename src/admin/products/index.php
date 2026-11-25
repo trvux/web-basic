@@ -40,8 +40,10 @@ $products = $pdo->query(
           </td>
           <td class="<?= UI_TD ?> text-right whitespace-nowrap">
             <a href="edit.php?id=<?= $p['id'] ?>" class="<?= ui_btn('outline', 'sm') ?>">Sửa</a>
-            <a href="delete.php?id=<?= $p['id'] ?>" class="<?= ui_btn('destructive', 'sm') ?>"
-               onclick="return confirm('Xoá sản phẩm này?')">Xoá</a>
+            <form method="post" action="delete.php" class="inline" onsubmit="return confirm('Xoá sản phẩm này?')">
+              <input type="hidden" name="id" value="<?= $p['id'] ?>">
+              <button type="submit" class="<?= ui_btn('destructive', 'sm') ?>">Xoá</button>
+            </form>
           </td>
         </tr>
       <?php endforeach; ?>

@@ -5,7 +5,7 @@ $error = '';
 
 // CREATE
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name']);
+    $name = trim($_POST['name'] ?? '');
 
     if ($name === '') {
         $error = 'Tên danh mục không được trống';

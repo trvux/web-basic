@@ -52,7 +52,7 @@ CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi D
 |---|---|---|---|---|
 | H1 | ✅ Banner hiện ở trang chủ; phân trang trang chủ; thẻ sản phẩm link sang chi tiết (bản cơ bản); trang tin tức cho khách (`posts/`); menu mobile; footer |
 | D1 | Kiểm tra bản chạy thật https://web.phren.dev (đăng nhập, giỏ, admin, upload ảnh) và hỏi giảng viên về yêu cầu "free host" | Chạy đủ chức năng; ghi URL vào slide | M | S |
-| A6 | Rà `admin/`: mọi file có `require_admin()`, xoá dùng POST, validate đầu vào | Checklist trong PR | M | S |
+| A6 | ✅ Rà `admin/`: mọi file có `require_admin()`, xoá dùng POST, validate đầu vào | Checklist trong PR | M | S |
 | P1 | Slide `BaoCao_LaptopShop.pptx`: demo theo từng câu rubric, đóng góp từng người | Mỗi người trình bày phần mình | M | M |
 | P2 | Đóng gói zip theo mẫu đề: `BaoCao_LaptopShop.pptx` + thư mục `DoAn_LaptopShop/` (mã nguồn + `docker-compose.yml` + SQL + ảnh, kèm hướng dẫn chạy bằng Docker), không có mật khẩu/`.env` thật, tên file đủ MSSV 4 người | Nộp CTE | M | S |
 
