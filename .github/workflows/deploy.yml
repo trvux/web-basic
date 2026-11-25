@@ -26,6 +26,9 @@ jobs:
             grep -v "^No syntax errors" /tmp/lint.txt
             exit $rc'
 
+      - name: Giao diện phải dùng bộ shadcn (ui.php), không màu Tailwind viết cứng
+        run: ./scripts/check-ui.sh
+
       - name: Không có "?>" trong comment (sẽ làm PHP thoát chế độ code giữa chừng)
         run: |
           if grep -rnE '^\s*(//|#).*\?>' src --include='*.php'; then

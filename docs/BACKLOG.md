@@ -37,14 +37,14 @@ CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi D
 | Việc | Xong khi |
 |---|---|
 | Cài Docker Desktop, `git clone`, giải nén gói dữ liệu Huy gửi, `docker compose up -d --build`, `./scripts/migrate.sh` | Mở được http://localhost:8088, đăng nhập `admin / admin123` |
-| Đọc `README.md` mục 3–5 và `src/admin/products/` | Giải thích được form → PHP → MySQL → HTML |
+| Đọc `README.md` mục 3–6 và `src/admin/products/` | Giải thích được form → PHP → MySQL → HTML |
 | Tạo nhánh bằng `./scripts/start-work.sh feature/ten-viec` | Có nhánh riêng |
 
 ### H0. Huy chuẩn bị sẵn để không ai bị chặn (**tối 25/11**)
 
 | ID | Việc | Ưu | Cỡ |
 |---|---|---|---|
-| H0 | Merge PR luật làm việc; viết sẵn 3 file migration riêng (tên có ngày) cho `banners`, `posts`, cột `orders.status`; gắn menu header cho `products/`, `posts/`, admin `users/`, `banners/`, `posts/` | M | M |
+| H0 | Merge PR luật làm việc; viết sẵn 3 file migration riêng (tên có ngày) cho `banners`, `posts`, cột `orders.status`; thêm vào `ui.php` các component còn thiếu (select, phân trang, alert thành công, textarea); gắn menu header cho `products/`, `posts/`, admin `users/`, `banners/`, `posts/` | M | M |
 
 ### Huy (leader)
 
@@ -99,5 +99,5 @@ Việc nào không kịp thì giảm phạm vi, không kéo sang ngày 28. Ưu t
 
 - Chạy được trên localhost:8088, bấm thử đủ chức năng, không có PHP warning.
 - SQL dùng `prepare()`, in HTML dùng `e()`, mật khẩu `password_hash`, trang admin có `require_admin()`.
-- Dùng helper UI chung (`ui.php`).
+- **Bắt buộc dùng bộ giao diện shadcn trong `ui.php`** (xem README mục 5), không màu Tailwind viết cứng. Copy từ `src/admin/products/` và `src/index.php`. CI kiểm tra.
 - Trước khi mở PR đã chạy `./scripts/sync-branch.sh`; chỉ sửa file thuộc phần của mình; CI xanh; Huy duyệt rồi merge.
