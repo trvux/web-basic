@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
 
-// BẮT BUỘC: Thêm dòng này để chặn người lạ không đăng nhập mà vẫn xóa được
+// Lỗi 1: Thêm dòng này để bắt buộc phải đăng nhập admin mới được xóa
 require_admin(); 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-    // Ép kiểu (int) để bảo mật
+    // Lỗi 4: Ép kiểu (int) để bảo mật
     $id = (int)$_POST['id'];
     
     $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
