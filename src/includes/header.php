@@ -26,17 +26,17 @@ $userName = $_SESSION['user']['name'] ?? $_SESSION['user']['username'] ?? '';
     <a href="/index.php" class="mr-4 text-lg font-bold tracking-tight">LaptopShop</a>
     <div class="hidden items-center gap-1 lg:flex">
       <?php foreach ($nav as $label => $href): ?>
-        <a href="<?= e($href) ?>" class="rounded-md px-3 py-1.5 hover:bg-white/15"><?= e($label) ?></a>
+        <a href="<?= e($href) ?>" class="rounded-md px-3 py-1.5 whitespace-nowrap hover:bg-white/15"><?= e($label) ?></a>
       <?php endforeach; ?>
     </div>
 
     <div class="ml-auto hidden items-center gap-1 lg:flex">
       <?php if (!empty($_SESSION['user'])): ?>
-        <span class="px-2 opacity-90">Xin chào, <?= e($userName) ?></span>
-        <a href="/auth/logout.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Đăng xuất</a>
+        <span class="hidden max-w-40 truncate px-2 opacity-90 xl:inline">Xin chào, <?= e($userName) ?></span>
+        <a href="/auth/logout.php" class="rounded-md px-3 py-1.5 whitespace-nowrap hover:bg-white/15">Đăng xuất</a>
       <?php else: ?>
-        <a href="/auth/login.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Đăng nhập</a>
-        <a href="/auth/register.php" class="rounded-md bg-white px-3 py-1.5 text-primary hover:bg-white/90">Đăng ký</a>
+        <a href="/auth/login.php" class="rounded-md px-3 py-1.5 whitespace-nowrap hover:bg-white/15">Đăng nhập</a>
+        <a href="/auth/register.php" class="rounded-md bg-white px-3 py-1.5 whitespace-nowrap text-primary hover:bg-white/90">Đăng ký</a>
       <?php endif; ?>
     </div>
 

@@ -30,15 +30,15 @@ $products = $pdo->query(
       <?php foreach ($products as $p): ?>
         <tr class="<?= UI_TR ?>">
           <td class="<?= UI_TD ?>"><?= $p['id'] ?></td>
-          <td class="<?= UI_TD ?> font-medium"><?= e($p['name']) ?></td>
-          <td class="<?= UI_TD ?>"><?= number_format($p['price']) ?>đ</td>
+          <td class="<?= UI_TD ?> font-medium"><div class="line-clamp-2 min-w-56"><?= e($p['name']) ?></div></td>
+          <td class="<?= UI_TD ?> whitespace-nowrap"><?= number_format($p['price']) ?>đ</td>
           <td class="<?= UI_TD ?>"><?= $p['stock'] ?></td>
-          <td class="<?= UI_TD ?>">
+          <td class="<?= UI_TD ?> whitespace-nowrap">
             <?php if ($p['category_name']): ?>
               <span class="<?= ui_badge('secondary') ?>"><?= e($p['category_name']) ?></span>
             <?php endif; ?>
           </td>
-          <td class="<?= UI_TD ?> text-right">
+          <td class="<?= UI_TD ?> text-right whitespace-nowrap">
             <a href="edit.php?id=<?= $p['id'] ?>" class="<?= ui_btn('outline', 'sm') ?>">Sửa</a>
             <a href="delete.php?id=<?= $p['id'] ?>" class="<?= ui_btn('destructive', 'sm') ?>"
                onclick="return confirm('Xoá sản phẩm này?')">Xoá</a>

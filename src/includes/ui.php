@@ -143,8 +143,8 @@ const UI_AVATAR_FALLBACK = 'flex size-full items-center justify-center rounded-f
 // ---------- Breadcrumb ----------
 // Dùng: echo ui_breadcrumb(['Trang chủ' => '/index.php', 'Sản phẩm' => '/products/index.php'], 'Tên trang hiện tại');
 // Trang hiện tại truyền riêng để tiêu đề trùng nhãn cố định không đè mất link.
-function ui_breadcrumb($items, $current = null) {
-    $html = '<nav class="mb-4"><ol class="flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5">';
+function ui_breadcrumb($items, $current = null, $class = 'mb-4') {
+    $html = '<nav class="' . $class . '"><ol class="flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5">';
     $list = [];
     foreach ($items as $label => $href) $list[] = [$label, $href];
     if ($current !== null) $list[] = [$current, null];

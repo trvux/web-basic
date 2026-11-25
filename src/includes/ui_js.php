@@ -15,6 +15,14 @@
     d.addEventListener('click', e => { if (startedOutside && outside(d, e)) d.close(); });
   });
 
+  // Sidebar admin: thu gọn / mở rộng, nhớ lựa chọn. Phím tắt Ctrl/Cmd + B như shadcn
+  const sidebar = document.getElementById('admin-sidebar');
+  const toggleSidebar = () => localStorage.setItem('sidebar', sidebar.toggleAttribute('data-collapsed') ? 'collapsed' : 'expanded');
+  if (sidebar) {
+    $$('[data-sidebar-toggle]').forEach(b => b.addEventListener('click', toggleSidebar));
+    document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') { e.preventDefault(); toggleSidebar(); } });
+  }
+
   // Dropdown, popover, menubar: bấm ra ngoài hoặc nhấn Esc thì đóng
   const menus = () => $$('details[data-menu][open]');
   document.addEventListener('click', e => menus().forEach(d => { if (!d.contains(e.target)) d.open = false; }));

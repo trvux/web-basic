@@ -1,5 +1,8 @@
 </main>
-<?php if (empty($isAdminArea)): ?>
+<?php if (!empty($isAdminArea)): ?>
+  </div><!-- hết vùng nội dung admin -->
+</div><!-- hết khung sidebar -->
+<?php else: ?>
 <footer class="mt-8 border-t bg-card">
   <div class="mx-auto grid w-full max-w-6xl gap-6 px-4 py-8 text-sm sm:grid-cols-3">
     <div class="grid content-start gap-2">

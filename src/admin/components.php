@@ -4,7 +4,6 @@
 require_once __DIR__ . '/../includes/admin_header.php';
 ?>
 
-<?= ui_breadcrumb(['Dashboard' => '/admin/index.php'], 'Component') ?>
 <h1 class="<?= UI_H1 ?>">Component giao diện</h1>
 
 <div class="grid items-start gap-4 md:grid-cols-2">

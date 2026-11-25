@@ -29,6 +29,12 @@
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
     --color-destructive: var(--destructive);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);
@@ -61,6 +67,13 @@
     --accent: oklch(0.971 0.003 286.4);
     --accent-foreground: oklch(0.232 0.004 286.1);
     --destructive: oklch(0.577 0.245 27.325);
+    /* Sidebar trang admin (shadcn sidebar) */
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.232 0.004 286.1);
+    --sidebar-accent: oklch(0.945 0.004 286.4);
+    --sidebar-accent-foreground: oklch(0.232 0.004 286.1);
+    --sidebar-border: oklch(0.9 0.005 286.3);
+    --sidebar-ring: oklch(0.53 0.225 27.3);
     --border: oklch(0.865 0.007 286.3);
     --input: oklch(0.865 0.007 286.3);
   }
