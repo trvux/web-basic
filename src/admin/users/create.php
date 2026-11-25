@@ -11,6 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($username) || empty($password)) {
         $error = 'Vui lòng nhập tên đăng nhập và mật khẩu.';
+    } elseif (strlen($password) < 6) {
+        $error = 'Mật khẩu tối thiểu 6 ký tự.';
     } elseif ($role !== 'user' && $role !== 'admin') {
         $error = 'Vai trò không hợp lệ.';
     } else {
@@ -47,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="<?= UI_FIELD ?>">
         <label class="<?= UI_LABEL ?>">Mật khẩu</label>
-        <input type="password" name="password" class="<?= UI_INPUT ?>" required>
+        <input type="password" name="password" class="<?= UI_INPUT ?>" minlength="6" required>
     </div>
     <div class="<?= UI_FIELD ?>">
         <label class="<?= UI_LABEL ?>">Vai trò</label>

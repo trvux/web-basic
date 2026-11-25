@@ -29,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($username)) {
         $error = 'Tên đăng nhập không được để trống.';
+    } elseif ($password !== '' && strlen($password) < 6) {
+        $error = 'Mật khẩu mới tối thiểu 6 ký tự.';
     } elseif ($role !== 'user' && $role !== 'admin') {
         $error = 'Vai trò không hợp lệ.';
     } elseif ($id === $current_user_id && $role !== 'admin') {
@@ -45,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $params = [$username, $full_name, $role];
 
             // Nếu có nhập mật khẩu mới thì mới cập nhật mật khẩu
-            if (!empty($password)) {
+            if ($password !== '') {
                 $sql .= ", password = ?";
                 $params[] = password_hash($password, PASSWORD_DEFAULT);
             }
@@ -80,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="<?= UI_FIELD ?>">
         <label class="<?= UI_LABEL ?>">Mật khẩu mới (bỏ trống nếu không đổi)</label>
-        <input type="password" name="password" class="<?= UI_INPUT ?>">
+        <input type="password" name="password" class="<?= UI_INPUT ?>" minlength="6">
     </div>
     <div class="<?= UI_FIELD ?>">
         <label class="<?= UI_LABEL ?>">Vai trò</label>
