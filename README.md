@@ -67,10 +67,10 @@ Nền đã xong (đăng ký/đăng nhập, giỏ hàng, đặt hàng, CRUD sản
 
 | Ai | Việc chính | Được sửa |
 |---|---|---|
-| **Huy** (leader) | XAMPP, free host, rà bảo mật, slide, merge | mọi nơi (file chung: `includes/`, `config/`, `db/`, `src/index.php`) |
+| **Huy** (leader) | Trang chủ, tin tức, deploy VPS, rà bảo mật, slide, merge | mọi nơi (file chung: `includes/`, `config/`, `db/`, `src/index.php`, `src/posts/`) |
 | **Minh** | Danh sách SP (tìm kiếm, lọc, sắp xếp, phân trang), chi tiết SP | `src/products/` |
 | **Phong** | Quản lý người dùng, đổi trạng thái đơn, dashboard | `src/admin/users/`, `src/admin/orders/`, `src/admin/index.php` |
-| **Phúc** | Quản lý banner, bài viết, validate giỏ hàng | `src/admin/banners/`, `src/admin/posts/`, `src/account/`, `src/orders/`, `src/cart/` |
+| **Phúc** | Quản lý banner, bài viết (ảnh lưu `src/uploads/banners`, `src/uploads/posts`), validate giỏ hàng | `src/admin/banners/`, `src/admin/posts/`, `src/account/`, `src/orders/`, `src/cart/` |
 
 Ai cũng được thêm file mới trong `db/migrations/`. **CI tự báo đỏ nếu PR sửa file ngoài phần của mình**, nên hai người không thể sửa chung một file. Cần sửa file chung thì nhắn Huy, Huy sửa giúp.
 

@@ -10,4 +10,9 @@ data/.cache/
 # Dữ liệu/ảnh lấy từ gearvn.com: chỉ nằm trong DB và máy, KHÔNG đưa lên git (repo public)
 data/
 src/uploads/products/
+# ảnh admin upload khi test, không đưa lên git
+src/uploads/banners/*
+src/uploads/posts/*
+!src/uploads/banners/.gitkeep
+!src/uploads/posts/.gitkeep
 db/seed-products.sql

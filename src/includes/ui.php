@@ -195,3 +195,5 @@ function ui_progress($percent) {
 function ui_spinner() {
     return '<span class="inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" role="status" aria-label="Đang tải"></span>';
 }
+
+require_once __DIR__ . '/ui_extra.php';
