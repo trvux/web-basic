@@ -152,9 +152,11 @@ Giao diện đã được chuyển từ shadcn/ui sang PHP + Tailwind, nằm s�
 
 **Cấm:** màu Tailwind viết cứng như `bg-red-600`, `text-gray-800`, `border-gray-300`. Cần màu thì dùng token của theme: `bg-primary`, `text-muted-foreground`, `bg-muted`, `border-border`, `text-destructive`.
 
+**Xem toàn bộ component đang có** (kèm code để copy): đăng nhập admin rồi mở http://localhost:8088/admin/components.php. Có đủ: alert, avatar, breadcrumb, checkbox, radio, switch, select, input group, tabs, accordion, dropdown, dialog, phân trang, progress, skeleton, spinner, empty...
+
 **Mẫu để copy:** `src/admin/products/` (trang admin: bảng, form) và `src/index.php` (trang khách).
 
-Thiếu component (ví dụ select, phân trang, alert thành công)? **Nhắn Huy thêm vào `ui.php`**, đừng tự viết trong trang của mình. CI tự báo đỏ nếu PR có màu viết cứng.
+Thiếu component? **Nhắn Huy thêm vào `ui.php`**, đừng tự viết trong trang của mình. CI tự báo đỏ nếu PR có màu viết cứng.
 
 ## 6. Luật code (để khỏi bị lỗi/bị trừ điểm)
 
