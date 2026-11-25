@@ -14,6 +14,8 @@ $cartCount = array_sum($_SESSION['cart'] ?? []);
   <nav class="mx-auto flex max-w-6xl items-center gap-1 px-4 py-2.5 text-sm font-medium">
     <a href="/index.php" class="mr-4 text-lg font-bold tracking-tight">LaptopShop</a>
     <a href="/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Trang chủ</a>
+    <a href="/products/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Sản phẩm</a>
+    <a href="/posts/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Tin tức</a>
     <a href="/cart/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Giỏ hàng (<?= $cartCount ?>)</a>
     <?php if (!empty($_SESSION['user'])): ?>
       <a href="/orders/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Đơn hàng của tôi</a>
