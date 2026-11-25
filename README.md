@@ -26,7 +26,7 @@ Tắt: `docker compose down`
 **Sửa code PHP xong chỉ cần F5 trình duyệt**, không cần build lại (thư mục `src/` được mount thẳng vào container).
 
 ### Reset database
-Các file `.sql` trong `db/` chỉ chạy **lần đầu**, khi volume DB còn trống: `init.sql` (bảng, tài khoản, danh mục) rồi `seed-products.sql` (100 laptop, **không có trong git**, xem mục 8). Nếu sửa cấu trúc bảng hoặc muốn DB sạch lại:
+Các file `.sql` trong `db/` chỉ chạy **lần đầu**, khi volume DB còn trống: `init.sql` (bảng, tài khoản, danh mục) rồi `seed-products.sql` (100 laptop, **không có trong git**, xem mục 9). Nếu sửa cấu trúc bảng hoặc muốn DB sạch lại:
 
 ```bash
 docker compose down -v   # -v xoá luôn dữ liệu
@@ -53,7 +53,7 @@ src/
   cart/              giỏ hàng (session) + đặt hàng
   orders/            đơn hàng của tôi (khách)
 db/init.sql          tạo bảng, tài khoản test, danh mục
-db/seed-products.sql 100 laptop (TỰ SINH, không commit - xem mục 8)
+db/seed-products.sql 100 laptop (TỰ SINH, không commit - xem mục 9)
 data/                dữ liệu crawl từ gearvn.com (không commit)
 scripts/             crawl_gearvn.py -> download_images.py -> normalize_data.py -> build_seed_sql.py
 src/uploads/products ảnh sản phẩm (không commit)
@@ -137,7 +137,26 @@ git push
 
 Không biết gỡ thì **nhắn leader, đừng xóa đại code của người khác.** Không bao giờ dùng `git push --force`.
 
-## 5. Luật code (để khỏi bị lỗi/bị trừ điểm)
+## 5. Giao diện: BẮT BUỘC dùng bộ shadcn có sẵn
+
+Giao diện đã được chuyển từ shadcn/ui sang PHP + Tailwind, nằm sẵn trong **`src/includes/ui.php`** và theme đỏ trong `src/includes/head.php`. **Mọi trang mới phải dùng, không tự viết class riêng.** Làm sai thì giao diện mỗi trang một kiểu, mất điểm tiêu chí "giao diện đẹp" (3đ).
+
+| Cần | Dùng |
+|---|---|
+| Nút | `class="<?= ui_btn() ?>"`, biến thể `ui_btn('outline')`, `'destructive'`, `'secondary'`, `'ghost'`; cỡ `ui_btn('default', 'sm')` |
+| Ô nhập, nhãn, nhóm trường | `UI_INPUT`, `UI_TEXTAREA`, `UI_LABEL`, `UI_FIELD` |
+| Thẻ (card) | `UI_CARD`, `UI_CARD_HEADER`, `UI_CARD_TITLE`, `UI_CARD_CONTENT` |
+| Bảng | `UI_TABLE_WRAP`, `UI_TABLE`, `UI_TR`, `UI_TH`, `UI_TD` |
+| Nhãn nhỏ | `ui_badge()` |
+| Thông báo lỗi, tiêu đề, khung trang | `UI_ALERT_ERROR`, `UI_H1`, `UI_PAGE` |
+
+**Cấm:** màu Tailwind viết cứng như `bg-red-600`, `text-gray-800`, `border-gray-300`. Cần màu thì dùng token của theme: `bg-primary`, `text-muted-foreground`, `bg-muted`, `border-border`, `text-destructive`.
+
+**Mẫu để copy:** `src/admin/products/` (trang admin: bảng, form) và `src/index.php` (trang khách).
+
+Thiếu component (ví dụ select, phân trang, alert thành công)? **Nhắn Huy thêm vào `ui.php`**, đừng tự viết trong trang của mình. CI tự báo đỏ nếu PR có màu viết cứng.
+
+## 6. Luật code (để khỏi bị lỗi/bị trừ điểm)
 
 1. Query SQL luôn dùng `prepare()` + `execute([...])`, **không** nối biến vào chuỗi SQL.
 2. In dữ liệu ra HTML luôn bọc `e(...)`: `<?= e($row['name']) ?>`
@@ -145,7 +164,7 @@ Không biết gỡ thì **nhắn leader, đừng xóa đại code của người
 4. Mỗi trang PHP bắt đầu bằng `require_once` header, kết thúc bằng footer (xem file mẫu).
 5. Kết nối DB host là `db`, không phải `localhost`.
 
-## 6. Tài khoản trên web thật (web.phren.dev)
+## 7. Tài khoản trên web thật (web.phren.dev)
 
 Tài khoản được tạo thẳng trong DB trên VPS (không commit vào git). Leader thêm người mới bằng:
 
@@ -155,11 +174,11 @@ Tài khoản được tạo thẳng trong DB trên VPS (không commit vào git).
 
 Đăng nhập tại https://web.phren.dev/auth/login.php. **Không commit** mật khẩu, `.env` hay mã số sinh viên vào repo (repo này public).
 
-## 7. Thay đổi cấu trúc DB (migration)
+## 8. Thay đổi cấu trúc DB (migration)
 
 **Không sửa `db/init.sql`** (nó chỉ tạo DB mới lần đầu, và là file dễ conflict nhất). Cần thêm bảng/cột thì tạo file mới `db/migrations/YYYY-MM-DD-ten-viec.sql`, rồi chạy `./scripts/migrate.sh` (an toàn khi chạy nhiều lần). Sau mỗi lần `git pull` cũng chạy lại lệnh này. Chi tiết và ví dụ: `db/migrations/README.md`. Trên web thật, `deploy.sh` tự áp sau khi merge vào `main`.
 
-## 8. Dữ liệu sản phẩm (laptop từ gearvn.com)
+## 9. Dữ liệu sản phẩm (laptop từ gearvn.com)
 
 Sản phẩm, ảnh, thông số, bài viết lấy từ [gearvn.com](https://gearvn.com/collections/laptop) làm dữ liệu mẫu cho đồ án (nguồn từng sản phẩm lưu ở cột `products.source_url`). **Repo này public nên dữ liệu và ảnh không nằm trong git**: chỉ có script. Để có dữ liệu ở máy mình, nhận gói dữ liệu từ nhóm trưởng (giải nén vào `data/`, `src/uploads/products/`, `db/seed-products.sql`) hoặc tự chạy theo thứ tự (chỉ cần Python 3, mất vài phút):
 
