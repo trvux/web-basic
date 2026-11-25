@@ -34,25 +34,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($id === $current_user_id && $role !== 'admin') {
         $error = 'Bạn không thể tự hạ quyền chính mình.';
     } else {
-        // Xây dựng câu SQL cập nhật
-        $sql = "UPDATE users SET username = ?, full_name = ?, role = ?";
-        $params = [$username, $full_name, $role];
-
-        // Nếu có nhập mật khẩu mới thì mới cập nhật mật khẩu
-        if (!empty($password)) {
-            $sql .= ", password = ?";
-            $params[] = password_hash($password, PASSWORD_DEFAULT);
-        }
-        
-        $sql .= " WHERE id = ?";
-        $params[] = $id;
-
-        $updateStmt = $pdo->prepare($sql);
-        if ($updateStmt->execute($params)) {
-            header("Location: index.php");
-            exit;
+        // ✅ BƯỚC SỬA LỖI: Kiểm tra trùng username với người dùng KHÁC
+        $checkStmt = $pdo->prepare("SELECT id FROM users WHERE username = ? AND id != ?");
+        $checkStmt->execute([$username, $id]);
+        if ($checkStmt->fetch()) {
+            $error = 'Tên đăng nhập này đã được người dùng khác sử dụng.';
         } else {
-            $error = 'Có lỗi xảy ra khi cập nhật.';
+            // Xây dựng câu SQL cập nhật
+            $sql = "UPDATE users SET username = ?, full_name = ?, role = ?";
+            $params = [$username, $full_name, $role];
+
+            // Nếu có nhập mật khẩu mới thì mới cập nhật mật khẩu
+            if (!empty($password)) {
+                $sql .= ", password = ?";
+                $params[] = password_hash($password, PASSWORD_DEFAULT);
+            }
+            
+            $sql .= " WHERE id = ?";
+            $params[] = $id;
+
+            $updateStmt = $pdo->prepare($sql);
+            if ($updateStmt->execute($params)) {
+                header("Location: index.php");
+                exit;
+            } else {
+                $error = 'Có lỗi xảy ra khi cập nhật.';
+            }
         }
     }
 }
