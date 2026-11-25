@@ -10,6 +10,9 @@ session_start();
 // Thiếu dòng này sẽ dính lỗi "headers already sent" và redirect âm thầm không chạy.
 ob_start();
 
+// Giờ Việt Nam cho cả PHP (hàm date) lẫn MySQL (cột TIMESTAMP, xem dòng SET time_zone bên dưới)
+date_default_timezone_set('Asia/Ho_Chi_Minh');
+
 // Thông tin kết nối lấy từ biến môi trường (docker-compose.prod.yml đặt khi chạy thật).
 // Chạy trên máy dev không đặt gì thì dùng giá trị mặc định bên phải.
 $dbHost = getenv('DB_HOST') ?: 'db';
@@ -26,6 +29,8 @@ $pdo = new PDO(
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]
 );
+// MySQL lưu TIMESTAMP theo UTC và đổi sang múi giờ của kết nối khi đọc, nên đơn cũ cũng hiện đúng
+$pdo->exec("SET time_zone = '+07:00'");
 
 function is_admin() {
     return !empty($_SESSION['user']) && $_SESSION['user']['role'] === 'admin';
