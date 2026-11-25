@@ -265,6 +265,7 @@ docker compose up -d --build    # chạy (và build lại nếu đổi Dockerfil
 docker compose logs -f web      # xem log PHP
 docker compose down             # tắt
 docker compose down -v          # tắt và XOÁ dữ liệu DB (để init.sql chạy lại)
+./scripts/migrate.sh            # chạy sau khi "up" lại: tạo bảng/cột từ db/migrations/
 ```
 
 ---

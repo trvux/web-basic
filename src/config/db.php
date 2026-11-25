@@ -1,6 +1,8 @@
 <?php
 // Kết nối DB. Mọi file cần DB chỉ việc: require_once __DIR__ . '/../config/db.php';
 // Host là "db" (tên service trong docker-compose), KHÔNG phải localhost.
+// Cookie phiên: JavaScript không đọc được, và trang web khác không gửi kèm được trong request POST (chống CSRF)
+session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax']);
 session_start();
 
 // Output buffering: PHP giữ HTML lại đến cuối script rồi mới gửi đi.

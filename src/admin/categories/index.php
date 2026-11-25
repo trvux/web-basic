@@ -32,8 +32,10 @@ $categories = $pdo->query(
           <td class="<?= UI_TD ?>"><?= $c['product_count'] ?></td>
           <td class="<?= UI_TD ?> text-right">
             <a href="edit.php?id=<?= $c['id'] ?>" class="<?= ui_btn('outline', 'sm') ?>">Sửa</a>
-            <a href="delete.php?id=<?= $c['id'] ?>" class="<?= ui_btn('destructive', 'sm') ?>"
-               onclick="return confirm('Xoá danh mục này?')">Xoá</a>
+            <form method="post" action="delete.php" class="inline" onsubmit="return confirm('Xoá danh mục này?')">
+              <input type="hidden" name="id" value="<?= $c['id'] ?>">
+              <button type="submit" class="<?= ui_btn('destructive', 'sm') ?>">Xoá</button>
+            </form>
           </td>
         </tr>
       <?php endforeach; ?>

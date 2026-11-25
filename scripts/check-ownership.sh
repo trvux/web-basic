@@ -11,7 +11,7 @@ BASE=${BASE:-origin/main}
 owned_paths() {
   case "$1" in
     trvux) echo "ALL" ;;   # leader
-    nguyenminh-15th9na25) echo "src/products/ src/posts/" ;;
+    nguyenminh-15th9na25) echo "src/products/" ;;
     ikinggamergod1-glitch) echo "src/admin/users/ src/admin/orders/ src/admin/index.php" ;;
     mphuctr) echo "src/admin/banners/ src/admin/posts/ src/account/ src/orders/ src/cart/" ;;
     *) echo "ALL" ;;      # bot (CodeRabbit...) hoặc người lạ: không chặn ở đây, vẫn cần leader duyệt
