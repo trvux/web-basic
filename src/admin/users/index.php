@@ -6,8 +6,8 @@ $stmt->execute();
 $users = $stmt->fetchAll();
 ?>
 
-<div class="flex justify-between items-center mb-6">
-    <h1 class="<?= UI_H1 ?>">Quản lý người dùng</h1>
+<div class="mb-5 flex items-center justify-between">
+    <h1 class="text-2xl font-semibold tracking-tight">Quản lý người dùng</h1>
     <a href="create.php" class="<?= ui_btn() ?>">Thêm người dùng</a>
 </div>
 
@@ -19,7 +19,7 @@ $users = $stmt->fetchAll();
                 <th class="<?= UI_TH ?>">Tên đăng nhập</th>
                 <th class="<?= UI_TH ?>">Họ tên</th>
                 <th class="<?= UI_TH ?>">Vai trò</th>
-                <th class="<?= UI_TH ?>">Hành động</th>
+                <th class="<?= UI_TH ?> text-right">Hành động</th>
             </tr>
         </thead>
         <tbody>
@@ -35,8 +35,8 @@ $users = $stmt->fetchAll();
                         <span class="<?= ui_badge('secondary') ?>">User</span>
                     <?php endif; ?>
                 </td>
-                <td class="<?= UI_TD ?>">
-                    <a href="edit.php?id=<?= e($row['id']) ?>" class="<?= ui_btn('outline', 'sm') ?> mr-2">Sửa</a>
+                <td class="<?= UI_TD ?> text-right whitespace-nowrap">
+                    <a href="edit.php?id=<?= e($row['id']) ?>" class="<?= ui_btn('outline', 'sm') ?>">Sửa</a>
                     <form action="delete.php" method="POST" class="inline-block" onsubmit="return confirm('Xóa người dùng này?');">
                         <input type="hidden" name="id" value="<?= e($row['id']) ?>">
                         <button type="submit" class="<?= ui_btn('destructive', 'sm') ?>">Xóa</button>

@@ -65,28 +65,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<h1 class="<?= UI_H1 ?> mb-6">Sửa người dùng</h1>
+<h1 class="<?= UI_H1 ?>">Sửa người dùng</h1>
 
-<?php if ($error): ?>
-    <div class="<?= UI_ALERT_ERROR ?> mb-4"><?= e($error) ?></div>
-<?php endif; ?>
-
-<form action="" method="POST">
-    <div class="mb-4">
+<div class="<?= UI_CARD ?> max-w-md">
+<form action="" method="POST" class="<?= UI_CARD_CONTENT ?> gap-4!">
+    <?php if ($error): ?><div class="<?= UI_ALERT_ERROR ?>"><?= e($error) ?></div><?php endif; ?>
+    <div class="<?= UI_FIELD ?>">
         <label class="<?= UI_LABEL ?>">Tên đăng nhập (username)</label>
-        <input type="text" name="username" value="<?= e($user['username']) ?>" class="<?= UI_INPUT ?> w-full" required>
+        <input type="text" name="username" value="<?= e($user['username']) ?>" class="<?= UI_INPUT ?>" required>
     </div>
-    <div class="mb-4">
+    <div class="<?= UI_FIELD ?>">
         <label class="<?= UI_LABEL ?>">Họ và tên (full_name)</label>
-        <input type="text" name="full_name" value="<?= e($user['full_name'] ?? '') ?>" class="<?= UI_INPUT ?> w-full">
+        <input type="text" name="full_name" value="<?= e($user['full_name'] ?? '') ?>" class="<?= UI_INPUT ?>">
     </div>
-    <div class="mb-4">
+    <div class="<?= UI_FIELD ?>">
         <label class="<?= UI_LABEL ?>">Mật khẩu mới (bỏ trống nếu không đổi)</label>
-        <input type="password" name="password" class="<?= UI_INPUT ?> w-full">
+        <input type="password" name="password" class="<?= UI_INPUT ?>">
     </div>
-    <div class="mb-6">
+    <div class="<?= UI_FIELD ?>">
         <label class="<?= UI_LABEL ?>">Vai trò</label>
-        <select name="role" class="<?= UI_SELECT ?> w-full" required>
+        <select name="role" class="<?= UI_SELECT ?>" required>
             <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>User (Khách)</option>
             <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin (Quản trị)</option>
         </select>
@@ -96,5 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="index.php" class="<?= ui_btn('outline') ?>">Hủy</a>
     </div>
 </form>
+</div>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
