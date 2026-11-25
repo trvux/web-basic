@@ -12,7 +12,7 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 |---|---|---|---|---|
 | Huy | H0, H1 | Nền: migration, component, trang chủ, tin tức, menu, footer | ✅ | PR #5, #7 |
 | Huy | A6 | Rà bảo mật admin | ✅ | PR #9 |
-| Huy | D1 | Kiểm tra web thật, xác nhận host | 🟡 | Giảng viên đồng ý VPS + domain thay free host; trang công khai và máy chủ đạt; còn thử đăng nhập, đặt hàng, admin trên web thật |
+| Huy | D1 | Kiểm tra web thật, xác nhận host | ✅ | 26/11: giảng viên đồng ý VPS + domain; đặt hàng, admin, mobile, máy chủ đạt. Upload ảnh kiểm sau khi xong A4, A5 |
 | Huy | P1, P2 | Slide, đóng gói nộp | ⬜ | Làm sau khi xong tính năng |
 | Phong | A1 | Quản lý người dùng | ✅ | PR #12 |
 | Phong | A2 | Chi tiết đơn, đổi trạng thái | ⬜ | **Việc tiếp theo**, hạn 27/11 |
