@@ -61,3 +61,36 @@ const UI_ALERT_ERROR = 'relative grid w-full gap-0.5 rounded-lg border border-de
 // ---------- Khác ----------
 const UI_H1 = 'mb-5 text-2xl font-semibold tracking-tight';
 const UI_PAGE = 'mx-auto w-full max-w-6xl px-4 py-6';
+
+// ---------- Bổ sung cho các trang mới ----------
+const UI_SELECT = 'h-9 w-full min-w-0 rounded-md border border-input bg-background px-2.5 py-1 text-base shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm';
+const UI_ALERT_SUCCESS = 'relative grid w-full gap-0.5 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-left text-sm text-primary';
+const UI_EMPTY = 'rounded-xl bg-card px-6 py-10 text-center text-sm text-muted-foreground ring-1 ring-foreground/10';
+
+// Phân trang. $page = trang hiện tại (từ 1), $pages = tổng số trang,
+// $params = các tham số lọc cần giữ trên URL, vd ['q' => 'asus', 'brand' => 'Dell'] (không cần truyền 'page').
+// Dùng: echo ui_pagination($page, $pages, ["q" => $q]);
+function ui_pagination($page, $pages, $params = []) {
+    if ($pages <= 1) return '';
+    $page = max(1, min($page, $pages));
+    $link = function ($p, $label, $active = false, $disabled = false) use ($params) {
+        $cls = $active ? ui_btn('default', 'sm') : ui_btn('outline', 'sm');
+        if ($disabled) {
+            return '<span class="' . $cls . ' pointer-events-none opacity-50">' . $label . '</span>';
+        }
+        $href = '?' . http_build_query($params + ['page' => $p]);
+        return '<a href="' . htmlspecialchars($href, ENT_QUOTES, 'UTF-8') . '" class="' . $cls . '">' . $label . '</a>';
+    };
+    $html = '<nav class="mt-6 flex flex-wrap items-center justify-center gap-1">';
+    $html .= $link($page - 1, '‹ Trước', false, $page <= 1);
+    for ($i = 1; $i <= $pages; $i++) {
+        // luôn hiện trang đầu, cuối và 2 trang quanh trang hiện tại
+        if ($i === 1 || $i === $pages || abs($i - $page) <= 2) {
+            $html .= $link($i, (string)$i, $i === $page);
+        } elseif (abs($i - $page) === 3) {
+            $html .= '<span class="px-1 text-muted-foreground">…</span>';
+        }
+    }
+    $html .= $link($page + 1, 'Sau ›', false, $page >= $pages);
+    return $html . '</nav>';
+}

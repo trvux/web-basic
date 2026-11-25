@@ -17,6 +17,9 @@ require_admin(); // chặn người không phải admin (xem config/db.php)
     <a href="/admin/products/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Sản phẩm</a>
     <a href="/admin/categories/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Danh mục</a>
     <a href="/admin/orders/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Đơn hàng</a>
+    <a href="/admin/users/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Người dùng</a>
+    <a href="/admin/banners/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Banner</a>
+    <a href="/admin/posts/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Bài viết</a>
     <div class="ml-auto flex items-center gap-1">
       <a href="/index.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Xem trang bán hàng</a>
       <a href="/auth/logout.php" class="rounded-md px-3 py-1.5 hover:bg-white/15">Đăng xuất</a>
