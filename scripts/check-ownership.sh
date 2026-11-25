@@ -13,7 +13,7 @@ owned_paths() {
     trvux) echo "ALL" ;;   # leader
     nguyenminh-15th9na25) echo "src/products/ src/posts/" ;;
     ikinggamergod1-glitch) echo "src/admin/users/ src/admin/orders/ src/admin/index.php" ;;
-    mphuctr) echo "src/admin/banners/ src/admin/posts/ src/account/ src/orders/" ;;
+    mphuctr) echo "src/admin/banners/ src/admin/posts/ src/account/ src/orders/ src/cart/" ;;
     *) echo "ALL" ;;      # bot (CodeRabbit...) hoặc người lạ: không chặn ở đây, vẫn cần leader duyệt
   esac
 }

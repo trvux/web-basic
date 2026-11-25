@@ -24,7 +24,7 @@ Rubric ghi cụ thể **XAMPP**, nên phải có hướng dẫn chạy XAMPP dù
 | **Huy** (leader) | H0, X1–X3, D1, A6, P1, P2, review + merge | file chung (`includes/`, `config/`, `db/`, `src/index.php`) |
 | **Minh** | S1, S2, S4 | `src/products/` |
 | **Phong** | A1, A2, A3 | `src/admin/users/`, `src/admin/orders/`, `src/admin/index.php` |
-| **Phúc** | A4, A5, U3 | `src/admin/banners/`, `src/admin/posts/`, `src/account/`, `src/orders/` |
+| **Phúc** | A4, A5, U3 | `src/admin/banners/`, `src/admin/posts/`, `src/account/`, `src/orders/`, `src/cart/` |
 
 CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi DB thì thêm file trong `db/migrations/` (không sửa `init.sql`). **Cách học nhanh: đọc `src/admin/products/`, copy rồi sửa.**
 
