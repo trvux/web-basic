@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config/db.php';
 require_login(); // redirect phải chạy TRƯỚC khi in bất kỳ HTML nào
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/order_status.php';
 
 // Đơn hàng của user đang đăng nhập
 $stmt = $pdo->prepare('SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC');
@@ -24,7 +25,7 @@ $orders = $stmt->fetchAll();
     ?>
     <div class="<?= UI_CARD ?>">
       <div class="<?= UI_CARD_HEADER ?>">
-        <h3 class="<?= UI_CARD_TITLE ?>">Đơn #<?= $o['id'] ?></h3>
+        <h3 class="<?= UI_CARD_TITLE ?> flex items-center gap-2">Đơn #<?= $o['id'] ?> <?= order_status_badge($o['status']) ?></h3>
         <p class="<?= UI_CARD_DESC ?>"><?= e($o['created_at']) ?> - Tổng: <b class="text-primary"><?= number_format($o['total']) ?>đ</b></p>
       </div>
       <div class="<?= UI_CARD_CONTENT ?>">
