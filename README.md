@@ -61,41 +61,54 @@ src/uploads/products ảnh sản phẩm (không commit)
 Tài khoản test (**chỉ có trên máy dev**, bản chạy thật dùng mật khẩu khác): `admin / admin123` (admin), `user / user123` (khách)
 ```
 
-## 3. Phân công
+## 3. Phân công (hạn chốt: **28/11**)
 
-| Ai | Việc | Thư mục |
+Nền đã xong (đăng ký/đăng nhập, giỏ hàng, đặt hàng, CRUD sản phẩm + danh mục, xem đơn). Giờ mỗi người làm **tính năng mới trong thư mục riêng của mình**. Chi tiết từng việc, tiêu chí xong và lịch 3 ngày: [`docs/BACKLOG.md`](docs/BACKLOG.md).
+
+| Ai | Việc chính | Được sửa |
 |---|---|---|
-| A (leader) | Setup, CRUD sản phẩm, merge code, báo cáo | `admin/products/` |
-| B | CRUD danh mục | `admin/categories/` |
-| C | Đăng ký / đăng nhập / đăng xuất | `auth/` |
-| D | Giỏ hàng (dùng session) | `cart/` + nút trong `index.php` |
+| **Huy** (leader) | XAMPP, free host, rà bảo mật, slide, merge | mọi nơi (file chung: `includes/`, `config/`, `db/`, `src/index.php`) |
+| **Minh** | Danh sách SP (tìm kiếm, lọc, sắp xếp, phân trang), chi tiết SP | `src/products/` |
+| **Phong** | Quản lý người dùng, đổi trạng thái đơn, dashboard | `src/admin/users/`, `src/admin/orders/`, `src/admin/index.php` |
+| **Phúc** | Quản lý banner, bài viết, validate giỏ hàng | `src/admin/banners/`, `src/admin/posts/`, `src/account/`, `src/orders/` |
 
-Mỗi file stub đã có comment `TODO` ghi rõ các bước. **Cách học nhanh nhất: mở `src/admin/products/` ra đọc, copy rồi sửa.**
+Ai cũng được thêm file mới trong `db/migrations/`. **CI tự báo đỏ nếu PR sửa file ngoài phần của mình**, nên hai người không thể sửa chung một file. Cần sửa file chung thì nhắn Huy, Huy sửa giúp.
 
-Mỗi người làm trong thư mục riêng nên gần như không bị conflict.
+**Cách học nhanh nhất: mở `src/admin/products/` ra đọc, copy rồi sửa.**
 
 ## 4. Quy trình Git (mỗi người làm)
 
-**Nguyên tắc: không ai push thẳng vào `main`.** `main` tự deploy lên web.phren.dev, code lỗi là lên thẳng web thật. Mọi thứ đi qua Pull Request, leader duyệt và bấm merge.
+**Không ai push thẳng vào `main`** (GitHub chặn). `main` tự deploy lên web.phren.dev, code lỗi là lên thẳng web thật. Mọi thứ đi qua Pull Request, **Huy review rồi mới merge**. PR phải: CI xanh + được Huy duyệt + nhánh đã cập nhật theo `main` mới nhất.
+
+### Luật sống còn: luôn làm trên code MỚI NHẤT
+
+Lỗi hay gặp: A làm xong và được merge, B vẫn làm tiếp trên bản cũ ở máy mình rồi mở PR, kết quả là conflict hoặc ghi đè code của A. Cách tránh:
+
+1. **Bắt đầu việc mới = dùng script**, nó tự kéo `main` mới nhất rồi mới tách nhánh:
+   ```bash
+   ./scripts/start-work.sh feature/ten-viec     # vd: feature/product-filter
+   ```
+2. **Mỗi khi có PR của ai đó được merge** (Huy sẽ nhắn trong nhóm), và **trước khi mở PR**, cập nhật nhánh của mình:
+   ```bash
+   ./scripts/sync-branch.sh
+   ```
+3. GitHub sẽ **không cho merge** nếu nhánh của mình cũ hơn `main`. Thấy nút "Update branch" hoặc "This branch is out-of-date" thì chạy lại lệnh ở bước 2 rồi `git push`.
+
+Sau khi PR được merge: nhánh đó bỏ, việc tiếp theo tạo nhánh mới bằng `start-work.sh` (đừng dùng lại nhánh cũ).
+
+### Các bước mỗi việc
 
 ```bash
-# 1. Đầu mỗi buổi làm: kéo main mới nhất rồi tách nhánh MỚI cho việc của mình
-git checkout main
-git pull origin main
-./scripts/migrate.sh              # áp thay đổi DB của người khác (nếu có)
-git checkout -b feature/ten-viec  # vd: feature/categories
-
-# 2. Code, test trên localhost:8088, commit thường xuyên
-git add .
-git commit -m "Thêm CRUD danh mục"
-
-# 3. Đẩy nhánh lên và tạo Pull Request vào main
-git push -u origin feature/ten-viec
+./scripts/start-work.sh feature/ten-viec   # 1. kéo main mới + tách nhánh
+# 2. code, test trên localhost:8088, commit thường xuyên
+git add . && git commit -m "Thêm lọc sản phẩm theo hãng"
+./scripts/sync-branch.sh                   # 3. kéo main mới vào nhánh trước khi đẩy
+git push -u origin feature/ten-viec        # 4. đẩy nhánh, rồi mở Pull Request vào main trên GitHub
 ```
 
-**PR nhỏ, merge sớm.** Một PR = một việc nhỏ làm xong trong 1-2 ngày. Nhánh để càng lâu thì conflict càng to.
+**PR nhỏ, merge sớm.** Một PR = một việc nhỏ, làm xong trong vài giờ. Nhánh để càng lâu thì càng dễ conflict. Chỉ có 3 ngày, nên mỗi người mở PR **ít nhất 1 lần mỗi ngày**.
 
-**Chỉ sửa file trong thư mục việc của mình (mục 3).** File dùng chung (`src/includes/header.php`, `ui.php`, `src/index.php`, `db/init.sql`) chỉ leader sửa; cần gì thì nhắn leader. Hai người sửa cùng một file là nguyên nhân gây conflict.
+**Chỉ sửa file trong phần của mình (mục 3).** CI kiểm tra tự động.
 
 ### Khi GitHub báo "This branch has conflicts"
 

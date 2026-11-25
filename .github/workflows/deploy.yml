@@ -33,6 +33,21 @@ jobs:
             exit 1
           fi
 
+  ownership:
+    name: Chỉ sửa đúng thư mục của mình
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Kiểm tra file đã sửa thuộc phần của tác giả PR
+        env:
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          BASE: origin/${{ github.base_ref }}
+        run: ./scripts/check-ownership.sh
+
   deploy:
     name: Deploy lên web.phren.dev
     needs: lint
