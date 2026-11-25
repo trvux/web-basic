@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../config/db.php';
+// Lỗi 5: Đã bỏ require_once db.php vì admin_header đã lo
 require_once __DIR__ . '/../../includes/admin_header.php'; 
 
 $error = '';
@@ -28,14 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"><?= e($error) ?></div>
     <?php endif; ?>
 
-    <form action="" method="POST" class="bg-white shadow rounded-lg border border-gray-200 p-6">
+    <!-- Lỗi 2: Trả lại helper UI_CARD -->
+    <form action="" method="POST" class="<?= UI_CARD ?> p-6">
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">Tên danh mục</label>
-            <input type="text" name="name" class="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500 outline-none" required>
+            <!-- Lỗi 2: Trả lại helper UI_INPUT -->
+            <input type="text" name="name" class="<?= UI_INPUT ?> w-full" required>
         </div>
         <div class="flex gap-3">
-            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">Lưu danh mục</button>
-            <a href="index.php" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition">Hủy</a>
+            <button type="submit" class="<?= ui_btn('primary') ?>">Lưu danh mục</button>
+            <a href="index.php" class="<?= ui_btn('secondary') ?>">Hủy</a>
         </div>
     </form>
 </div>
