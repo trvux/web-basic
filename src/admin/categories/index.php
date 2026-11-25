@@ -1,44 +1,57 @@
 <?php
+// Kết nối Database (đường dẫn lùi 2 cấp để tới thư mục src/config)
+require_once __DIR__ . '/../../config/db.php';
+// Gọi header của admin
 require_once __DIR__ . '/../../includes/admin_header.php';
-
-// READ: kèm số sản phẩm của mỗi danh mục
-$categories = $pdo->query(
-    'SELECT c.*, COUNT(p.id) AS product_count
-     FROM categories c LEFT JOIN products p ON p.category_id = c.id
-     GROUP BY c.id ORDER BY c.id'
-)->fetchAll();
+// Lấy danh sách danh mục
+$stmt = $pdo->prepare("SELECT * FROM categories ORDER BY id DESC");
+$stmt->execute();
+$categories = $stmt->fetchAll();
 ?>
 
-<div class="mb-5 flex items-center justify-between">
-  <h1 class="text-2xl font-semibold tracking-tight">Quản lý danh mục</h1>
-  <a href="create.php" class="<?= ui_btn() ?>">+ Thêm danh mục</a>
+<div class="p-6 max-w-5xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Quản lý danh mục</h1>
+        <!-- Nút thêm mới sử dụng hàm ui_btn -->
+        <a href="create.php" class="<?= ui_btn('primary') ?>">Thêm danh mục mới</a>
+    </div>
+
+    <div class="bg-white rounded-lg shadow overflow-hidden <?= UI_CARD ?>">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tên danh mục</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hành động</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <?php foreach ($categories as $row): ?>
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap"><?= e($row['id']) ?></td>
+                    <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+                        <?= e($row['name']) ?>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="edit.php?id=<?= e($row['id']) ?>" class="text-blue-600 hover:text-blue-900 mr-4">Sửa</a>
+                        
+                        <!-- Xóa dùng POST để bảo mật, tránh bị xóa nhầm qua link -->
+                        <form action="delete.php" method="POST" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                            <input type="hidden" name="id" value="<?= e($row['id']) ?>">
+                            <button type="submit" class="text-red-600 hover:text-red-900">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                
+                <?php if (empty($categories)): ?>
+                <tr>
+                    <td colspan="3" class="px-6 py-4 text-center text-gray-500">Chưa có danh mục nào.</td>
+                </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div class="<?= UI_TABLE_WRAP ?>">
-  <table class="<?= UI_TABLE ?>">
-    <thead>
-      <tr class="<?= UI_TR ?>">
-        <th class="<?= UI_TH ?>">ID</th>
-        <th class="<?= UI_TH ?>">Tên</th>
-        <th class="<?= UI_TH ?>">Số sản phẩm</th>
-        <th class="<?= UI_TH ?> text-right">Hành động</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($categories as $c): ?>
-        <tr class="<?= UI_TR ?>">
-          <td class="<?= UI_TD ?>"><?= $c['id'] ?></td>
-          <td class="<?= UI_TD ?> font-medium"><?= e($c['name']) ?></td>
-          <td class="<?= UI_TD ?>"><?= $c['product_count'] ?></td>
-          <td class="<?= UI_TD ?> text-right">
-            <a href="edit.php?id=<?= $c['id'] ?>" class="<?= ui_btn('outline', 'sm') ?>">Sửa</a>
-            <a href="delete.php?id=<?= $c['id'] ?>" class="<?= ui_btn('destructive', 'sm') ?>"
-               onclick="return confirm('Xoá danh mục này?')">Xoá</a>
-          </td>
-        </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-</div>
-
-<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
+require_once __DIR__ . '/../../includes/admin_footer.php';
