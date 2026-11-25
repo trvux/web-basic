@@ -4,24 +4,24 @@ require_once __DIR__ . '/../../includes/admin_header.php';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+    $username = trim($_POST['username'] ?? '');
+    $full_name = trim($_POST['full_name'] ?? '');
     $password = $_POST['password'] ?? '';
     $role = $_POST['role'] ?? '';
 
-    if (empty($name) || empty($email) || empty($password)) {
-        $error = 'Vui lòng nhập đầy đủ thông tin.';
+    if (empty($username) || empty($password)) {
+        $error = 'Vui lòng nhập tên đăng nhập và mật khẩu.';
     } elseif ($role !== 'user' && $role !== 'admin') {
         $error = 'Vai trò không hợp lệ.';
     } else {
-        $checkStmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-        $checkStmt->execute([$email]);
+        $checkStmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+        $checkStmt->execute([$username]);
         if ($checkStmt->fetch()) {
-            $error = 'Email này đã được sử dụng.';
+            $error = 'Tên đăng nhập này đã được sử dụng.';
         } else {
             $hash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
-            if ($stmt->execute([$name, $email, $hash, $role])) {
+            $stmt = $pdo->prepare("INSERT INTO users (username, full_name, password, role) VALUES (?, ?, ?, ?)");
+            if ($stmt->execute([$username, $full_name, $hash, $role])) {
                 header("Location: index.php");
                 exit;
             } else {
@@ -35,17 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <h1 class="<?= UI_H1 ?> mb-6">Thêm người dùng mới</h1>
 
 <?php if ($error): ?>
-    <div class="mb-4"><?= UI_ALERT_ERROR ?> <?= e($error) ?></div>
+    <div class="<?= UI_ALERT_ERROR ?> mb-4"><?= e($error) ?></div>
 <?php endif; ?>
 
 <form action="" method="POST">
     <div class="mb-4">
-        <label class="<?= UI_LABEL ?>">Tên người dùng</label>
-        <input type="text" name="name" class="<?= UI_INPUT ?> w-full" required>
+        <label class="<?= UI_LABEL ?>">Tên đăng nhập (username)</label>
+        <input type="text" name="username" class="<?= UI_INPUT ?> w-full" required>
     </div>
     <div class="mb-4">
-        <label class="<?= UI_LABEL ?>">Email</label>
-        <input type="email" name="email" class="<?= UI_INPUT ?> w-full" required>
+        <label class="<?= UI_LABEL ?>">Họ và tên (full_name)</label>
+        <input type="text" name="full_name" class="<?= UI_INPUT ?> w-full">
     </div>
     <div class="mb-4">
         <label class="<?= UI_LABEL ?>">Mật khẩu</label>

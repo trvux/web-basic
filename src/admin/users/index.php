@@ -16,8 +16,8 @@ $users = $stmt->fetchAll();
         <thead>
             <tr class="<?= UI_TR ?>">
                 <th class="<?= UI_TH ?>">ID</th>
-                <th class="<?= UI_TH ?>">Tên</th>
-                <th class="<?= UI_TH ?>">Email</th>
+                <th class="<?= UI_TH ?>">Tên đăng nhập</th>
+                <th class="<?= UI_TH ?>">Họ tên</th>
                 <th class="<?= UI_TH ?>">Vai trò</th>
                 <th class="<?= UI_TH ?>">Hành động</th>
             </tr>
@@ -26,8 +26,8 @@ $users = $stmt->fetchAll();
             <?php foreach ($users as $row): ?>
             <tr class="<?= UI_TR ?>">
                 <td class="<?= UI_TD ?>"><?= e($row['id']) ?></td>
-                <td class="<?= UI_TD ?>"><?= e($row['name']) ?></td>
-                <td class="<?= UI_TD ?>"><?= e($row['email']) ?></td>
+                <td class="<?= UI_TD ?>"><?= e($row['username']) ?></td>
+                <td class="<?= UI_TD ?>"><?= e($row['full_name'] ?? '') ?></td>
                 <td class="<?= UI_TD ?>">
                     <?php if ($row['role'] === 'admin'): ?>
                         <span class="<?= ui_badge('default') ?>">Admin</span>

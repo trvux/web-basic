@@ -14,27 +14,41 @@ $stmt->execute([$id]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    echo '<div class="mb-4">' . UI_EMPTY . 'Người dùng không tồn tại.</div>';
+    echo '<div class="mb-4"><div class="' . UI_EMPTY . '">Người dùng không tồn tại.</div></div>';
     require_once __DIR__ . '/../../includes/footer.php';
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+    $username = trim($_POST['username'] ?? '');
+    $full_name = trim($_POST['full_name'] ?? '');
+    $password = $_POST['password'] ?? '';
     $role = $_POST['role'] ?? '';
     
     $current_user_id = (int)($_SESSION['user']['id'] ?? 0);
 
-    if (empty($name) || empty($email)) {
-        $error = 'Vui lòng nhập đầy đủ thông tin.';
+    if (empty($username)) {
+        $error = 'Tên đăng nhập không được để trống.';
     } elseif ($role !== 'user' && $role !== 'admin') {
         $error = 'Vai trò không hợp lệ.';
     } elseif ($id === $current_user_id && $role !== 'admin') {
         $error = 'Bạn không thể tự hạ quyền chính mình.';
     } else {
-        $updateStmt = $pdo->prepare("UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?");
-        if ($updateStmt->execute([$name, $email, $role, $id])) {
+        // Xây dựng câu SQL cập nhật
+        $sql = "UPDATE users SET username = ?, full_name = ?, role = ?";
+        $params = [$username, $full_name, $role];
+
+        // Nếu có nhập mật khẩu mới thì mới cập nhật mật khẩu
+        if (!empty($password)) {
+            $sql .= ", password = ?";
+            $params[] = password_hash($password, PASSWORD_DEFAULT);
+        }
+        
+        $sql .= " WHERE id = ?";
+        $params[] = $id;
+
+        $updateStmt = $pdo->prepare($sql);
+        if ($updateStmt->execute($params)) {
             header("Location: index.php");
             exit;
         } else {
@@ -47,17 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <h1 class="<?= UI_H1 ?> mb-6">Sửa người dùng</h1>
 
 <?php if ($error): ?>
-    <div class="mb-4"><?= UI_ALERT_ERROR ?> <?= e($error) ?></div>
+    <div class="<?= UI_ALERT_ERROR ?> mb-4"><?= e($error) ?></div>
 <?php endif; ?>
 
 <form action="" method="POST">
     <div class="mb-4">
-        <label class="<?= UI_LABEL ?>">Tên người dùng</label>
-        <input type="text" name="name" value="<?= e($user['name']) ?>" class="<?= UI_INPUT ?> w-full" required>
+        <label class="<?= UI_LABEL ?>">Tên đăng nhập (username)</label>
+        <input type="text" name="username" value="<?= e($user['username']) ?>" class="<?= UI_INPUT ?> w-full" required>
     </div>
     <div class="mb-4">
-        <label class="<?= UI_LABEL ?>">Email</label>
-        <input type="email" name="email" value="<?= e($user['email']) ?>" class="<?= UI_INPUT ?> w-full" required>
+        <label class="<?= UI_LABEL ?>">Họ và tên (full_name)</label>
+        <input type="text" name="full_name" value="<?= e($user['full_name'] ?? '') ?>" class="<?= UI_INPUT ?> w-full">
+    </div>
+    <div class="mb-4">
+        <label class="<?= UI_LABEL ?>">Mật khẩu mới (bỏ trống nếu không đổi)</label>
+        <input type="password" name="password" class="<?= UI_INPUT ?> w-full">
     </div>
     <div class="mb-6">
         <label class="<?= UI_LABEL ?>">Vai trò</label>
