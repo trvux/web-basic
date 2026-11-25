@@ -4,14 +4,34 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 
 **Hạn chốt: 28/11/2026, mọi thứ phải xong và chạy được.** Hôm nay 25/11. Huy đã làm xong nền, 3 bạn còn lại bắt đầu từ số 0, nên backlog này **cắt gọn chỉ còn việc ăn điểm rubric**.
 
+## 0. Tiến độ (cập nhật 26/11, 00:10)
+
+✅ xong, đã merge · 🟡 đang làm · ⬜ chưa làm
+
+| Người | ID | Việc | Trạng thái | Ghi chú |
+|---|---|---|---|---|
+| Huy | H0, H1 | Nền: migration, component, trang chủ, tin tức, menu, footer | ✅ | PR #5, #7 |
+| Huy | A6 | Rà bảo mật admin | ✅ | PR #9 |
+| Huy | D1 | Kiểm tra web thật, xác nhận host | ✅ | 26/11: giảng viên đồng ý VPS + domain; đặt hàng, admin, mobile, máy chủ đạt. Upload ảnh kiểm sau khi xong A4, A5 |
+| Huy | P1, P2 | Slide, đóng gói nộp | ⬜ | Làm sau khi xong tính năng |
+| Phong | A1 | Quản lý người dùng | ✅ | PR #12 |
+| Phong | A2 | Chi tiết đơn, đổi trạng thái | ⬜ | **Việc tiếp theo**, hạn 27/11 |
+| Phong | A3 | Dashboard thống kê | ⬜ | Hạn 27/11 |
+| Minh | S1 | Danh sách sản phẩm: lọc, sắp xếp, phân trang | ⬜ | Trang còn "Đang xây dựng" |
+| Minh | S2 | Chi tiết sản phẩm đầy đủ | 🟡 | PR #11 để file sai chỗ, cần sửa |
+| Minh | S4 | Responsive 2 trang trên | ⬜ | |
+| Phúc | A4 | Quản lý banner | ⬜ | Chưa có nhánh/PR |
+| Phúc | A5 | Quản lý bài viết | ⬜ | Chưa có nhánh/PR |
+| Phúc | U3 | Validate giỏ và thanh toán | ⬜ | |
+
 ## 1. Rubric → việc phải làm
 
 | Tiêu chí | Điểm | Tối đa khi... | Hiện trạng | Việc |
 |---|---|---|---|---|
 | Giao diện đẹp, thân thiện | 3 | đạt cả 3: **đầy đủ, đẹp, tiện dụng** | Có trang chủ (banner, tìm tên, lọc danh mục, phân trang), menu mobile, footer, tin tức. Thiếu trang danh sách lọc nâng cao, chi tiết đầy đủ | S1, S2 |
 | Cấu hình được web server | 1 | chạy được web server + MySQL | **Giảng viên đồng ý dùng Docker thay XAMPP** (Apache + PHP + MySQL). Đã chạy được | P1 (chụp ảnh đưa vào slide) |
-| Chức năng quản trị đầy đủ | 3 | ≥3/4 thao tác đọc/thêm/xoá/sửa **và quản trị được nội dung website** | CRUD SP + DM xong, đơn chỉ xem | A1, A2, A4 (+A3, A5) |
-| Có website local + free host | 1 | chạy local và trên host công khai | Local bằng Docker + VPS có domain thật (https://web.phren.dev). Đề ghi "free host": Huy xác nhận với giảng viên là VPS được chấp nhận | D1 |
+| Chức năng quản trị đầy đủ | 3 | ≥3/4 thao tác đọc/thêm/xoá/sửa **và quản trị được nội dung website** | CRUD SP + DM + người dùng xong, đơn chỉ xem | A1, A2, A4 (+A3, A5) |
+| Có website local + free host | 1 | chạy local và trên host công khai | Local bằng Docker + VPS có domain thật (https://web.phren.dev), **giảng viên đã đồng ý** | D1 |
 | Làm việc nhóm hiệu quả | 1 | nhóm chấm hoàn thành 80–100% | Có PR flow | Mỗi người ≥1 PR/ngày |
 | Nộp đúng hạn | 1 | đúng hạn + đúng quy cách file | Chưa | P1, P2 |
 
@@ -51,7 +71,7 @@ CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi D
 | ID | Việc | Tiêu chí hoàn thành | Ưu | Cỡ |
 |---|---|---|---|---|
 | H1 | ✅ Banner hiện ở trang chủ; phân trang trang chủ; thẻ sản phẩm link sang chi tiết (bản cơ bản); trang tin tức cho khách (`posts/`); menu mobile; footer |
-| D1 | Kiểm tra bản chạy thật https://web.phren.dev (đăng nhập, giỏ, admin, upload ảnh) và hỏi giảng viên về yêu cầu "free host" | Chạy đủ chức năng; ghi URL vào slide | M | S |
+| D1 | Kiểm tra bản chạy thật https://web.phren.dev (đăng nhập, đặt hàng, admin, upload ảnh) | Chạy đủ chức năng; ghi URL vào slide | M | S |
 | A6 | ✅ Rà `admin/`: mọi file có `require_admin()`, xoá dùng POST, validate đầu vào | Checklist trong PR | M | S |
 | P1 | Slide `BaoCao_LaptopShop.pptx`: demo theo từng câu rubric, đóng góp từng người | Mỗi người trình bày phần mình | M | M |
 | P2 | Đóng gói zip theo mẫu đề: `BaoCao_LaptopShop.pptx` + thư mục `DoAn_LaptopShop/` (mã nguồn + `docker-compose.yml` + SQL + ảnh, kèm hướng dẫn chạy bằng Docker), không có mật khẩu/`.env` thật, tên file đủ MSSV 4 người | Nộp CTE | M | S |
@@ -68,7 +88,7 @@ CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi D
 
 | ID | Việc | Tiêu chí hoàn thành | Ưu | Cỡ |
 |---|---|---|---|---|
-| A1 | `admin/users/`: danh sách, thêm, sửa vai trò, xoá | `password_hash`, không tự xoá/hạ quyền chính mình, có `require_admin()` | M | L |
+| A1 | ✅ `admin/users/`: danh sách, thêm, sửa vai trò, xoá | `password_hash`, không tự xoá/hạ quyền chính mình, có `require_admin()` | M | L |
 | A2 | `admin/orders/`: xem chi tiết đơn + **đổi trạng thái** (mới → đang giao → hoàn tất → huỷ) | Dùng migration `orders.status` của Huy | M | M |
 | A3 | `admin/index.php`: dashboard (doanh thu, số đơn theo trạng thái, số SP/DM/user) | Số liệu lấy từ DB | S | M |
 
