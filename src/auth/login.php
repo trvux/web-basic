@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // password_verify so mật khẩu nhập vào với hash trong DB
     if ($user && password_verify($password, $user['password'])) {
+        session_regenerate_id(true); // đổi mã phiên sau khi đăng nhập (chống session fixation)
         $_SESSION['user'] = [
             'id' => $user['id'],
             'username' => $user['username'],

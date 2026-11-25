@@ -17,15 +17,15 @@ $error = '';
 
 // UPDATE
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name']);
-    $price = (int)$_POST['price'];
-    $stock = (int)$_POST['stock'];
-    $description = trim($_POST['description']);
-    $image = trim($_POST['image']);
-    $category_id = $_POST['category_id'] !== '' ? (int)$_POST['category_id'] : null;
+    $name = trim($_POST['name'] ?? '');
+    $price = (int)($_POST['price'] ?? 0);
+    $stock = (int)($_POST['stock'] ?? 0);
+    $description = trim($_POST['description'] ?? '');
+    $image = trim($_POST['image'] ?? '');
+    $category_id = ($_POST['category_id'] ?? '') !== '' ? (int)$_POST['category_id'] : null;
 
-    if ($name === '' || $price <= 0) {
-        $error = 'Tên không được trống và giá phải lớn hơn 0';
+    if ($name === '' || $price <= 0 || $stock < 0) {
+        $error = 'Tên không được trống, giá phải lớn hơn 0 và tồn kho không được âm';
     } else {
         $stmt = $pdo->prepare(
             'UPDATE products
