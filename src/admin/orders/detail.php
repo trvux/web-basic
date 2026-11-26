@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/admin_header.php';
+require_once __DIR__ . '/../../includes/order_status.php';
 
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) {
@@ -7,18 +8,10 @@ if (!$id) {
     exit;
 }
 
-// Xử lý đổi trạng thái (POST)
+// Xử lý đổi trạng thái (POST). Huỷ đơn sẽ tự trả hàng về kho.
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
-    $new_status = $_POST['status'];
-    $valid_statuses = ['new', 'shipping', 'done', 'cancelled'];
-    
-    if (in_array($new_status, $valid_statuses)) {
-        $updateStmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
-        $updateStmt->execute([$new_status, $id]);
-        $success = "Cập nhật trạng thái thành công!";
-    } else {
-        $error = "Trạng thái không hợp lệ.";
-    }
+    $error = set_order_status($pdo, $id, $_POST['status']);
+    if ($error === null) $success = "Cập nhật trạng thái thành công!";
 }
 
 $stmt = $pdo->prepare("SELECT o.*, u.username, u.full_name FROM orders o LEFT JOIN users u ON o.user_id = u.id WHERE o.id = ?");
@@ -42,8 +35,7 @@ $items = $itemStmt->fetchAll();
 </div>
 
 <?php if (isset($success)): ?>
-    <!-- Đã sửa dòng 48: Dùng token bg-secondary thay cho bg-green -->
-    <div class="mb-4 p-4 rounded border bg-secondary text-secondary-foreground"><?= e($success) ?></div>
+    <div class="<?= UI_ALERT_SUCCESS ?> mb-4"><?= e($success) ?></div>
 <?php endif; ?>
 <?php if (isset($error)): ?>
     <div class="<?= UI_ALERT_ERROR ?> mb-4"><?= e($error) ?></div>
@@ -54,6 +46,7 @@ $items = $itemStmt->fetchAll();
         <h2 class="font-bold text-lg mb-2">Thông tin khách hàng</h2>
         <p><strong>Tên đăng nhập:</strong> <?= e($order['username'] ?? 'N/A') ?></p>
         <p><strong>Họ tên:</strong> <?= e($order['full_name'] ?? 'N/A') ?></p>
+        <p><strong>Trạng thái:</strong> <?= order_status_badge($order['status']) ?></p>
         <p><strong>Ngày đặt:</strong> <?= e($order['created_at'] ?? '') ?></p>
         <!-- Đã sửa dòng 63: Dùng token text-primary thay cho text-red -->
         <p><strong>Tổng tiền:</strong> <span class="text-primary font-bold"><?= number_format($order['total'] ?? 0, 0, ',', '.') ?> đ</span></p>
@@ -63,12 +56,11 @@ $items = $itemStmt->fetchAll();
         <h2 class="font-bold text-lg mb-2">Cập nhật trạng thái</h2>
         <form action="" method="POST" class="flex gap-4 items-end">
             <div class="flex-1">
-                <label class="<?= UI_LABEL ?>">Trạng thái hiện tại</label>
-                <select name="status" class="<?= UI_SELECT ?> w-full">
-                    <option value="new" <?= $order['status'] === 'new' ? 'selected' : '' ?>>New (Mới)</option>
-                    <option value="shipping" <?= $order['status'] === 'shipping' ? 'selected' : '' ?>>Shipping (Đang giao)</option>
-                    <option value="done" <?= $order['status'] === 'done' ? 'selected' : '' ?>>Done (Hoàn thành)</option>
-                    <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelled (Đã hủy)</option>
+                <label class="<?= UI_LABEL ?> mb-2" for="status">Đổi sang</label>
+                <select id="status" name="status" class="<?= UI_SELECT ?> w-full">
+                    <?php foreach (ORDER_STATUSES as $value => [$label]): ?>
+                        <option value="<?= $value ?>" <?= $order['status'] === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <button type="submit" class="<?= ui_btn() ?>">Cập nhật</button>

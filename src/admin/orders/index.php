@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/admin_header.php';
+require_once __DIR__ . '/../../includes/order_status.php';
 
 $sql = "SELECT o.*, u.username 
         FROM orders o 
@@ -34,14 +35,7 @@ $orders = $stmt->fetchAll();
                 <td class="<?= UI_TD ?>"><?= e($row['created_at'] ?? '') ?></td>
                 <td class="<?= UI_TD ?>"><?= number_format($row['total'] ?? 0, 0, ',', '.') ?> đ</td>
                 <td class="<?= UI_TD ?>">
-                    <?php 
-                        $status = $row['status'] ?? 'new';
-                        $badgeType = 'secondary';
-                        if ($status === 'done') $badgeType = 'default';
-                        if ($status === 'cancelled') $badgeType = 'destructive';
-                        if ($status === 'shipping') $badgeType = 'outline';
-                    ?>
-                    <span class="<?= ui_badge($badgeType) ?>"><?= e($status) ?></span>
+                    <?= order_status_badge($row['status']) ?>
                 </td>
                 <td class="<?= UI_TD ?>">
                     <a href="detail.php?id=<?= e($row['id']) ?>" class="<?= ui_btn('outline', 'sm') ?>">Xem chi tiết</a>

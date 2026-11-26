@@ -4,7 +4,7 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 
 **Hạn chốt: 28/11/2026, mọi thứ phải xong và chạy được.** Hôm nay 25/11. Huy đã làm xong nền, 3 bạn còn lại bắt đầu từ số 0, nên backlog này **cắt gọn chỉ còn việc ăn điểm rubric**.
 
-## 0. Tiến độ (cập nhật 26/11, 00:10)
+## 0. Tiến độ (cập nhật 26/11, 01:15)
 
 ✅ xong, đã merge · 🟡 đang làm · ⬜ chưa làm
 
@@ -15,8 +15,8 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 | Huy | D1 | Kiểm tra web thật, xác nhận host | ✅ | 26/11: giảng viên đồng ý VPS + domain; đặt hàng, admin, mobile, máy chủ đạt. Upload ảnh kiểm sau khi xong A4, A5 |
 | Huy | P1, P2 | Slide, đóng gói nộp | ⬜ | Làm sau khi xong tính năng |
 | Phong | A1 | Quản lý người dùng | ✅ | PR #12 |
-| Phong | A2 | Chi tiết đơn, đổi trạng thái | ⬜ | **Việc tiếp theo**, hạn 27/11 |
-| Phong | A3 | Dashboard thống kê | ⬜ | Hạn 27/11 |
+| Phong | A2 | Chi tiết đơn, đổi trạng thái | ✅ | PR #15; leader bổ sung nhãn tiếng Việt, trả kho khi huỷ, khách xem trạng thái |
+| Phong | A3 | Dashboard thống kê | ⬜ | **Việc tiếp theo**, hạn 27/11. Doanh thu không tính đơn đã huỷ |
 | Minh | S1 | Danh sách sản phẩm: lọc, sắp xếp, phân trang | ⬜ | Trang còn "Đang xây dựng" |
 | Minh | S2 | Chi tiết sản phẩm đầy đủ | 🟡 | PR #11 để file sai chỗ, cần sửa |
 | Minh | S4 | Responsive 2 trang trên | ⬜ | |
@@ -89,7 +89,7 @@ CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi D
 | ID | Việc | Tiêu chí hoàn thành | Ưu | Cỡ |
 |---|---|---|---|---|
 | A1 | ✅ `admin/users/`: danh sách, thêm, sửa vai trò, xoá | `password_hash`, không tự xoá/hạ quyền chính mình, có `require_admin()` | M | L |
-| A2 | `admin/orders/`: xem chi tiết đơn + **đổi trạng thái** (mới → đang giao → hoàn tất → huỷ) | Dùng migration `orders.status` của Huy | M | M |
+| A2 | ✅ `admin/orders/`: xem chi tiết đơn + **đổi trạng thái** (mới → đang giao → hoàn tất → huỷ) | Dùng migration `orders.status` của Huy | M | M |
 | A3 | `admin/index.php`: dashboard (doanh thu, số đơn theo trạng thái, số SP/DM/user) | Số liệu lấy từ DB | S | M |
 
 ### Phúc: quản trị nội dung website
