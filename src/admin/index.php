@@ -1,16 +1,24 @@
 <?php
-require_once '/var/www/html/includes/admin_header.php';
+// Lùi 1 cấp (../) để ra thư mục src, sau đó vào includes
+require_once __DIR__ . '/../includes/admin_header.php';
 
+// 1. Lấy các số liệu thống kê
 $revStmt = $pdo->query("SELECT SUM(total) FROM orders WHERE status IN ('done', 'shipping')");
 $total_revenue = $revStmt->fetchColumn() ?: 0;
+
 $orderStmt = $pdo->query("SELECT COUNT(id) FROM orders");
 $total_orders = $orderStmt->fetchColumn() ?: 0;
+
 $prodStmt = $pdo->query("SELECT COUNT(id) FROM products");
 $total_products = $prodStmt->fetchColumn() ?: 0;
+
 $catStmt = $pdo->query("SELECT COUNT(id) FROM categories");
 $total_categories = $catStmt->fetchColumn() ?: 0;
+
 $userStmt = $pdo->query("SELECT COUNT(id) FROM users");
 $total_users = $userStmt->fetchColumn() ?: 0;
+
+// 2. Lấy 5 đơn hàng mới nhất
 $recentOrdersStmt = $pdo->query("SELECT o.*, u.username FROM orders o LEFT JOIN users u ON o.user_id = u.id ORDER BY o.id DESC LIMIT 5");
 $recent_orders = $recentOrdersStmt->fetchAll();
 ?>
@@ -19,6 +27,7 @@ $recent_orders = $recentOrdersStmt->fetchAll();
     <h1 class="<?= UI_H1 ?>">Dashboard</h1>
 </div>
 
+<!-- Khu vực 5 thẻ thống kê -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
     <div class="<?= UI_CARD ?> p-4 flex flex-col justify-between">
         <span class="text-muted-foreground text-sm font-medium">Sản phẩm</span>
@@ -42,6 +51,7 @@ $recent_orders = $recentOrdersStmt->fetchAll();
     </div>
 </div>
 
+<!-- Khu vực Đơn hàng mới nhất -->
 <div class="flex justify-between items-center mb-4 mt-8">
     <h2 class="text-xl font-bold">Đơn hàng mới nhất</h2>
     <a href="orders/index.php" class="<?= ui_btn('outline', 'sm') ?>">Xem tất cả</a>
@@ -70,14 +80,23 @@ $recent_orders = $recentOrdersStmt->fetchAll();
                         $status = $row['status'];
                         $badgeType = 'secondary';
                         $statusText = 'Mới';
-                        if ($status === 'shipping') { $badgeType = 'outline'; $statusText = 'Đang giao'; } 
-                        elseif ($status === 'done') { $badgeType = 'default'; $statusText = 'Hoàn thành'; } 
-                        elseif ($status === 'cancelled') { $badgeType = 'destructive'; $statusText = 'Đã hủy'; }
+
+                        if ($status === 'shipping') {
+                            $badgeType = 'outline';
+                            $statusText = 'Đang giao';
+                        } elseif ($status === 'done') {
+                            $badgeType = 'default';
+                            $statusText = 'Hoàn thành';
+                        } elseif ($status === 'cancelled') {
+                            $badgeType = 'destructive';
+                            $statusText = 'Đã hủy';
+                        }
                     ?>
                     <span class="<?= ui_badge($badgeType) ?>"><?= e($statusText) ?></span>
                 </td>
             </tr>
             <?php endforeach; ?>
+            
             <?php if (empty($recent_orders)): ?>
             <tr>
                 <td colspan="5" class="<?= UI_TD ?> text-center py-4 text-muted-foreground">Chưa có đơn hàng nào.</td>
@@ -88,5 +107,6 @@ $recent_orders = $recentOrdersStmt->fetchAll();
 </div>
 
 <?php 
-require_once '/var/www/html/includes/footer.php'; 
+// Lùi 1 cấp (../) để gọi footer
+require_once __DIR__ . '/../includes/footer.php'; 
 ?>

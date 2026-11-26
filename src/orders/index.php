@@ -1,66 +1,54 @@
 <?php
-// Dùng đường dẫn tuyệt đối, không sợ sai cấp
-require_once '/var/www/html/includes/admin_header.php';
+require_once __DIR__ . '/../config/db.php';
+require_login(); // redirect phải chạy TRƯỚC khi in bất kỳ HTML nào
+require_once __DIR__ . '/../includes/header.php';
 
-$sql = "SELECT o.*, u.username 
-        FROM orders o 
-        LEFT JOIN users u ON o.user_id = u.id 
-        ORDER BY o.id DESC";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
+// Đơn hàng của user đang đăng nhập
+$stmt = $pdo->prepare('SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC');
+$stmt->execute([$_SESSION['user']['id']]);
 $orders = $stmt->fetchAll();
 ?>
 
-<div class="flex justify-between items-center mb-6">
-    <h1 class="<?= UI_H1 ?>">Quản lý đơn hàng</h1>
-</div>
+<h1 class="<?= UI_H1 ?>">Đơn hàng của tôi</h1>
 
-<div class="<?= UI_TABLE_WRAP ?>">
-    <table class="<?= UI_TABLE ?>">
-        <thead>
+<?php if (!$orders): ?>
+  <p class="text-muted-foreground">Bạn chưa có đơn hàng nào.</p>
+<?php endif; ?>
+
+<div class="grid gap-4">
+  <?php foreach ($orders as $o): ?>
+    <?php
+      $stmt = $pdo->prepare('SELECT * FROM order_items WHERE order_id = ?');
+      $stmt->execute([$o['id']]);
+      $lines = $stmt->fetchAll();
+    ?>
+    <div class="<?= UI_CARD ?>">
+      <div class="<?= UI_CARD_HEADER ?>">
+        <h3 class="<?= UI_CARD_TITLE ?>">Đơn #<?= $o['id'] ?></h3>
+        <p class="<?= UI_CARD_DESC ?>"><?= e($o['created_at']) ?> - Tổng: <b class="text-primary"><?= number_format($o['total']) ?>đ</b></p>
+      </div>
+      <div class="<?= UI_CARD_CONTENT ?>">
+        <table class="<?= UI_TABLE ?>">
+          <thead>
             <tr class="<?= UI_TR ?>">
-                <th class="<?= UI_TH ?>">Mã ĐH</th>
-                <th class="<?= UI_TH ?>">Khách hàng</th>
-                <th class="<?= UI_TH ?>">Ngày đặt</th>
-                <th class="<?= UI_TH ?>">Tổng tiền</th>
-                <th class="<?= UI_TH ?>">Trạng thái</th>
-                <th class="<?= UI_TH ?>">Hành động</th>
+              <th class="<?= UI_TH ?> px-0!">Sản phẩm</th>
+              <th class="<?= UI_TH ?>">Đơn giá</th>
+              <th class="<?= UI_TH ?>">SL</th>
             </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($orders as $row): ?>
-            <tr class="<?= UI_TR ?>">
-                <td class="<?= UI_TD ?>">#<?= e($row['id']) ?></td>
-                <td class="<?= UI_TD ?>"><?= e($row['username'] ?? 'Khách vãng lai') ?></td>
-                <td class="<?= UI_TD ?>"><?= e($row['created_at'] ?? '') ?></td>
-                <td class="<?= UI_TD ?>"><?= number_format($row['total'] ?? 0, 0, ',', '.') ?> đ</td>
-                <td class="<?= UI_TD ?>">
-                    <?php 
-                        $status = $row['status'] ?? 'new';
-                        $badgeType = 'secondary';
-                        if ($status === 'done') $badgeType = 'default';
-                        if ($status === 'cancelled') $badgeType = 'destructive';
-                        if ($status === 'shipping') $badgeType = 'outline';
-                    ?>
-                    <span class="<?= ui_badge($badgeType) ?>"><?= e($status) ?></span>
-                </td>
-                <td class="<?= UI_TD ?>">
-                    <a href="detail.php?id=<?= e($row['id']) ?>" class="<?= ui_btn('outline', 'sm') ?>">Xem chi tiết</a>
-                </td>
-            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($lines as $l): ?>
+              <tr class="<?= UI_TR ?>">
+                <td class="<?= UI_TD ?> px-0!"><?= e($l['name']) ?></td>
+                <td class="<?= UI_TD ?>"><?= number_format($l['price']) ?>đ</td>
+                <td class="<?= UI_TD ?>"><?= $l['qty'] ?></td>
+              </tr>
             <?php endforeach; ?>
-            
-            <?php if (empty($orders)): ?>
-            <tr>
-                <td colspan="6" class="<?= UI_TD ?> text-center py-4">
-                    <div class="<?= UI_EMPTY ?>">Chưa có đơn hàng nào.</div>
-                </td>
-            </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <?php endforeach; ?>
 </div>
 
-<?php 
-require_once '/var/www/html/includes/footer.php'; 
-?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>
