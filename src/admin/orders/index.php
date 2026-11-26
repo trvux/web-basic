@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../../includes/admin_header.php';
+// Dùng đường dẫn tuyệt đối để không bao giờ sai
+require_once '/var/www/html/includes/admin_header.php';
 
 $sql = "SELECT o.*, u.username 
         FROM orders o 
@@ -51,7 +52,7 @@ $orders = $stmt->fetchAll();
             
             <?php if (empty($orders)): ?>
             <tr>
-                <td colspan="6" class="<?= UI_TD ?> text-center">
+                <td colspan="6" class="<?= UI_TD ?> text-center py-4">
                     <div class="<?= UI_EMPTY ?>">Chưa có đơn hàng nào.</div>
                 </td>
             </tr>
@@ -60,4 +61,6 @@ $orders = $stmt->fetchAll();
     </table>
 </div>
 
-<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
+<?php 
+require_once '/var/www/html/includes/footer.php'; 
+?>

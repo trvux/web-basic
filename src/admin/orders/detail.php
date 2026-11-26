@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../includes/admin_header.php';
+require_once '/var/www/html/includes/admin_header.php';
 
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) {
@@ -107,4 +107,4 @@ $items = $itemStmt->fetchAll();
     </table>
 </div>
 
-<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
+<?php require_once '/var/www/html/includes/footer.php';
