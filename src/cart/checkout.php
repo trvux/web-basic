@@ -9,9 +9,18 @@ if (!$items) {
 }
 
 $error = '';
+$phone = trim($_POST['phone'] ?? '');
+$address = trim($_POST['address'] ?? '');
 
 // Khi bấm "Xác nhận đặt hàng"
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!preg_match('/^0\d{9}$/', $phone)) {
+        $error = 'Số điện thoại gồm 10 chữ số, bắt đầu bằng 0.';
+    } elseif ($address === '' || strlen($address) > 255) {
+        $error = 'Vui lòng nhập địa chỉ giao hàng (không quá dài).';
+    }
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
     // Transaction: hoặc tạo đủ đơn + trừ kho, hoặc không làm gì cả
     $pdo->beginTransaction();
     try {
@@ -20,13 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare('SELECT stock FROM products WHERE id = ? FOR UPDATE');
             $stmt->execute([$p['id']]);
             $stock = $stmt->fetchColumn();
-            if ($stock < $p['qty']) {
+            if ($p['qty'] < 1 || $stock < $p['qty']) {
                 throw new Exception('Sản phẩm "' . $p['name'] . '" không đủ hàng (còn ' . $stock . ')');
             }
         }
 
-        $stmt = $pdo->prepare('INSERT INTO orders (user_id, total) VALUES (?, ?)');
-        $stmt->execute([$_SESSION['user']['id'], $total]);
+        $stmt = $pdo->prepare('INSERT INTO orders (user_id, total, phone, address) VALUES (?, ?, ?, ?)');
+        $stmt->execute([$_SESSION['user']['id'], $total, $phone, $address]);
         $orderId = $pdo->lastInsertId();
 
         foreach ($items as $p) {
@@ -77,11 +86,25 @@ require_once __DIR__ . '/../includes/header.php';
   </table>
 </div>
 
-<form method="post" class="mt-4 flex flex-wrap items-center justify-between gap-3">
-  <p class="text-lg">Tổng cộng: <b class="text-primary"><?= number_format($total) ?>đ</b></p>
-  <div class="flex gap-2">
-    <a href="index.php" class="<?= ui_btn('outline') ?>">Quay lại giỏ</a>
-    <button type="submit" class="<?= ui_btn() ?>">Xác nhận đặt hàng</button>
+<form method="post" class="mt-4 grid gap-4">
+  <div class="<?= UI_CARD ?> max-w-md">
+    <div class="<?= UI_CARD_CONTENT ?> gap-4!">
+      <div class="<?= UI_FIELD ?>">
+        <label class="<?= UI_LABEL ?>" for="phone">Số điện thoại</label>
+        <input class="<?= UI_INPUT ?>" id="phone" name="phone" value="<?= e($phone) ?>" inputmode="numeric" maxlength="10" required>
+      </div>
+      <div class="<?= UI_FIELD ?>">
+        <label class="<?= UI_LABEL ?>" for="address">Địa chỉ giao hàng</label>
+        <input class="<?= UI_INPUT ?>" id="address" name="address" value="<?= e($address) ?>" maxlength="255" required>
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <p class="text-lg">Tổng cộng: <b class="text-primary"><?= number_format($total) ?>đ</b></p>
+    <div class="flex gap-2">
+      <a href="index.php" class="<?= ui_btn('outline') ?>">Quay lại giỏ</a>
+      <button type="submit" class="<?= ui_btn() ?>">Xác nhận đặt hàng</button>
+    </div>
   </div>
 </form>
 

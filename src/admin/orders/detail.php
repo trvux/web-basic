@@ -47,6 +47,8 @@ $items = $itemStmt->fetchAll();
         <p><strong>Tên đăng nhập:</strong> <?= e($order['username'] ?? 'N/A') ?></p>
         <p><strong>Họ tên:</strong> <?= e($order['full_name'] ?? 'N/A') ?></p>
         <p><strong>Trạng thái:</strong> <?= order_status_badge($order['status']) ?></p>
+        <p><strong>Số điện thoại:</strong> <?= e($order['phone'] ?: 'N/A') ?></p>
+        <p><strong>Địa chỉ giao:</strong> <?= e($order['address'] ?: 'N/A') ?></p>
         <p><strong>Ngày đặt:</strong> <?= e($order['created_at'] ?? '') ?></p>
         <!-- Đã sửa dòng 63: Dùng token text-primary thay cho text-red -->
         <p><strong>Tổng tiền:</strong> <span class="text-primary font-bold"><?= number_format($order['total'] ?? 0, 0, ',', '.') ?> đ</span></p>
