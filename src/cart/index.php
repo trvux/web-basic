@@ -5,6 +5,10 @@ require_once __DIR__ . '/../includes/header.php';
 ?>
 
 <h1 class="<?= UI_H1 ?>">Giỏ hàng</h1>
+<?php if (!empty($_SESSION['cart_message'])): ?>
+  <div class="<?= UI_ALERT_ERROR ?> mb-4"><?= e($_SESSION['cart_message']) ?></div>
+  <?php unset($_SESSION['cart_message']); ?>
+<?php endif; ?>
 
 <?php if (!$items): ?>
   <div class="<?= UI_CARD ?> items-center text-center">
@@ -31,7 +35,7 @@ require_once __DIR__ . '/../includes/header.php';
               <td class="<?= UI_TD ?>"><?= number_format($p['price']) ?>đ</td>
               <td class="<?= UI_TD ?>">
                 <input type="number" name="qty[<?= $p['id'] ?>]" value="<?= $p['qty'] ?>"
-                       min="0" max="<?= $p['stock'] ?>" class="<?= UI_INPUT ?> w-20!">
+                       min="1" max="<?= $p['stock'] ?>" class="<?= UI_INPUT ?> w-20!">
               </td>
               <td class="<?= UI_TD ?> font-medium"><?= number_format($p['subtotal']) ?>đ</td>
               <td class="<?= UI_TD ?> text-right">
