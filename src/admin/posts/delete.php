@@ -1,12 +1,18 @@
 <?php
-require_once __DIR__ . '/../../includes/admin_header.php';
+require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../includes/upload.php';
+require_admin();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-    $id = (int)$_POST['id'];
-    $stmt = $pdo->prepare('DELETE FROM posts WHERE id = ?');
+// DELETE: chỉ nhận POST, xoá cả file ảnh
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = (int)($_POST['id'] ?? 0);
+    $stmt = $pdo->prepare('SELECT image FROM posts WHERE id = ?');
     $stmt->execute([$id]);
+    $image = $stmt->fetchColumn();
+
+    $pdo->prepare('DELETE FROM posts WHERE id = ?')->execute([$id]);
+    delete_image_upload($image, 'posts');
 }
 
 header('Location: index.php');
 exit;
-?>

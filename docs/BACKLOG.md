@@ -4,7 +4,7 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 
 **Hạn chốt: 28/11/2026, mọi thứ phải xong và chạy được.** Hôm nay 25/11. Huy đã làm xong nền, 3 bạn còn lại bắt đầu từ số 0, nên backlog này **cắt gọn chỉ còn việc ăn điểm rubric**.
 
-## 0. Tiến độ (cập nhật 26/11, 01:15)
+## 0. Tiến độ (cập nhật 27/11, 00:20)
 
 ✅ xong, đã merge · 🟡 đang làm · ⬜ chưa làm
 
@@ -20,8 +20,8 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 | Minh | S1 | Danh sách sản phẩm: lọc, sắp xếp, phân trang | ⬜ | Trang còn "Đang xây dựng" |
 | Minh | S2 | Chi tiết sản phẩm đầy đủ | 🟡 | PR #11 để file sai chỗ, cần sửa |
 | Minh | S4 | Responsive 2 trang trên | ⬜ | |
-| Phúc | A4 | Quản lý banner | ⬜ | Chưa có nhánh/PR |
-| Phúc | A5 | Quản lý bài viết | ⬜ | Chưa có nhánh/PR |
+| Phúc | A4 | Quản lý banner | ✅ | PR #19; leader sửa cho khớp DB, thêm upload ảnh |
+| Phúc | A5 | Quản lý bài viết | ✅ | PR #19; leader sửa cho khớp DB, thêm upload ảnh |
 | Phúc | U3 | Validate giỏ và thanh toán | ⬜ | |
 
 ## 1. Rubric → việc phải làm
@@ -96,8 +96,8 @@ CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi D
 
 | ID | Việc | Tiêu chí hoàn thành | Ưu | Cỡ |
 |---|---|---|---|---|
-| A4 | `admin/banners/`: CRUD banner (ảnh lưu `src/uploads/banners/`, chỉ lưu tên file vào DB; link, thứ tự, bật/tắt) | Banner hiện ở trang chủ (đã có sẵn). Phần **"quản trị được nội dung website"**. Chỉ nhận jpg/png/webp, giới hạn dung lượng | M | L |
-| A5 | `admin/posts/`: CRUD bài viết (tiêu đề, nội dung, ảnh lưu `src/uploads/posts/`) | Bài viết hiện ở trang `posts/` (đã có sẵn). Đây là trang menu "Tin tức" nên **bắt buộc** | M | L |
+| A4 | ✅ `admin/banners/`: CRUD banner (ảnh lưu `src/uploads/banners/`, chỉ lưu tên file vào DB; link, thứ tự, bật/tắt) | Banner hiện ở trang chủ. Phần **"quản trị được nội dung website"**. Chỉ nhận jpg/png/webp, giới hạn dung lượng | M | L |
+| A5 | ✅ `admin/posts/`: CRUD bài viết (tiêu đề, nội dung, ảnh lưu `src/uploads/posts/`) | Bài viết hiện ở trang `posts/`. Đây là trang menu "Tin tức" nên **bắt buộc** | M | L |
 | U3 | Validate giỏ/thanh toán: số lượng ≥1, form địa chỉ + SĐT | Không đặt được số lượng âm/0 | S | S |
 
 **Đã cắt khỏi phạm vi** (làm sau nếu dư thời gian): trang tài khoản/đổi mật khẩu, huỷ đơn phía khách.
