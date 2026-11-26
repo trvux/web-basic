@@ -16,7 +16,7 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 | Huy | P1, P2 | Slide, đóng gói nộp | ⬜ | Làm sau khi xong tính năng |
 | Phong | A1 | Quản lý người dùng | ✅ | PR #12 |
 | Phong | A2 | Chi tiết đơn, đổi trạng thái | ✅ | PR #15; leader bổ sung nhãn tiếng Việt, trả kho khi huỷ, khách xem trạng thái |
-| Phong | A3 | Dashboard thống kê | ⬜ | **Việc tiếp theo**, hạn 27/11. Doanh thu không tính đơn đã huỷ |
+| Phong | A3 | Dashboard thống kê | ✅ | Leader bổ sung đơn theo trạng thái, thẻ bấm được |
 | Minh | S1 | Danh sách sản phẩm: lọc, sắp xếp, phân trang | ⬜ | Trang còn "Đang xây dựng" |
 | Minh | S2 | Chi tiết sản phẩm đầy đủ | 🟡 | PR #11 để file sai chỗ, cần sửa |
 | Minh | S4 | Responsive 2 trang trên | ⬜ | |
@@ -90,7 +90,7 @@ CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi D
 |---|---|---|---|---|
 | A1 | ✅ `admin/users/`: danh sách, thêm, sửa vai trò, xoá | `password_hash`, không tự xoá/hạ quyền chính mình, có `require_admin()` | M | L |
 | A2 | ✅ `admin/orders/`: xem chi tiết đơn + **đổi trạng thái** (mới → đang giao → hoàn tất → huỷ) | Dùng migration `orders.status` của Huy | M | M |
-| A3 | `admin/index.php`: dashboard (doanh thu, số đơn theo trạng thái, số SP/DM/user) | Số liệu lấy từ DB | S | M |
+| A3 | ✅ `admin/index.php`: dashboard (doanh thu, số đơn theo trạng thái, số SP/DM/user) | Số liệu lấy từ DB | S | M |
 
 ### Phúc: quản trị nội dung website
 

@@ -1,6 +1,6 @@
 <?php
-// Lùi 1 cấp (../) để ra thư mục src, sau đó vào includes
 require_once __DIR__ . '/../includes/admin_header.php';
+require_once __DIR__ . '/../includes/order_status.php';
 
 // 1. Lấy các số liệu thống kê
 $revStmt = $pdo->query("SELECT SUM(total) FROM orders WHERE status IN ('done', 'shipping')");
@@ -18,6 +18,18 @@ $total_categories = $catStmt->fetchColumn() ?: 0;
 $userStmt = $pdo->query("SELECT COUNT(id) FROM users");
 $total_users = $userStmt->fetchColumn() ?: 0;
 
+// Số đơn theo từng trạng thái: ['new' => 2, 'done' => 1, ...]
+$by_status = $pdo->query("SELECT status, COUNT(*) FROM orders GROUP BY status")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// Thẻ thống kê: [nhãn, giá trị, trang mở khi bấm]
+$stats = [
+    ['Sản phẩm', number_format($total_products), '/admin/products/index.php'],
+    ['Danh mục', number_format($total_categories), '/admin/categories/index.php'],
+    ['Đơn hàng', number_format($total_orders), '/admin/orders/index.php'],
+    ['Người dùng', number_format($total_users), '/admin/users/index.php'],
+    ['Doanh thu', number_format($total_revenue, 0, ',', '.') . ' đ', '/admin/orders/index.php'],
+];
+
 // 2. Lấy 5 đơn hàng mới nhất
 $recentOrdersStmt = $pdo->query("SELECT o.*, u.username FROM orders o LEFT JOIN users u ON o.user_id = u.id ORDER BY o.id DESC LIMIT 5");
 $recent_orders = $recentOrdersStmt->fetchAll();
@@ -27,28 +39,25 @@ $recent_orders = $recentOrdersStmt->fetchAll();
     <h1 class="<?= UI_H1 ?>">Dashboard</h1>
 </div>
 
-<!-- Khu vực 5 thẻ thống kê -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-    <div class="<?= UI_CARD ?> p-4 flex flex-col justify-between">
-        <span class="text-muted-foreground text-sm font-medium">Sản phẩm</span>
-        <span class="text-2xl font-bold mt-2 text-primary"><?= number_format($total_products) ?></span>
-    </div>
-    <div class="<?= UI_CARD ?> p-4 flex flex-col justify-between">
-        <span class="text-muted-foreground text-sm font-medium">Danh mục</span>
-        <span class="text-2xl font-bold mt-2 text-primary"><?= number_format($total_categories) ?></span>
-    </div>
-    <div class="<?= UI_CARD ?> p-4 flex flex-col justify-between">
-        <span class="text-muted-foreground text-sm font-medium">Đơn hàng</span>
-        <span class="text-2xl font-bold mt-2 text-primary"><?= number_format($total_orders) ?></span>
-    </div>
-    <div class="<?= UI_CARD ?> p-4 flex flex-col justify-between">
-        <span class="text-muted-foreground text-sm font-medium">Người dùng</span>
-        <span class="text-2xl font-bold mt-2 text-primary"><?= number_format($total_users) ?></span>
-    </div>
-    <div class="<?= UI_CARD ?> p-4 flex flex-col justify-between">
-        <span class="text-muted-foreground text-sm font-medium">Doanh thu</span>
-        <span class="text-2xl font-bold mt-2 text-primary"><?= number_format($total_revenue, 0, ',', '.') ?> đ</span>
-    </div>
+<!-- Khu vực 5 thẻ thống kê (bấm để mở trang tương ứng) -->
+<div class="mb-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+    <?php foreach ($stats as [$label, $value, $link]): ?>
+        <a href="<?= $link ?>" class="<?= UI_CARD ?> gap-2! p-4 transition-colors hover:bg-muted/50">
+            <span class="text-sm font-medium text-muted-foreground"><?= $label ?></span>
+            <span class="text-2xl font-bold whitespace-nowrap text-primary"><?= $value ?></span>
+        </a>
+    <?php endforeach; ?>
+</div>
+<p class="mb-6 text-xs text-muted-foreground">Doanh thu chỉ tính đơn đang giao và hoàn tất.</p>
+
+<h2 class="mb-4 text-xl font-bold">Đơn theo trạng thái</h2>
+<div class="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <?php foreach (array_keys(ORDER_STATUSES) as $key): ?>
+        <div class="<?= UI_CARD ?> gap-2! p-4">
+            <span><?= order_status_badge($key) ?></span>
+            <span class="text-2xl font-bold"><?= number_format($by_status[$key] ?? 0) ?></span>
+        </div>
+    <?php endforeach; ?>
 </div>
 
 <!-- Khu vực Đơn hàng mới nhất -->
@@ -71,28 +80,12 @@ $recent_orders = $recentOrdersStmt->fetchAll();
         <tbody>
             <?php foreach ($recent_orders as $row): ?>
             <tr class="<?= UI_TR ?>">
-                <td class="<?= UI_TD ?>">#<?= e($row['id']) ?></td>
+                <td class="<?= UI_TD ?>"><a href="/admin/orders/detail.php?id=<?= e($row['id']) ?>" class="font-medium text-primary hover:underline">#<?= e($row['id']) ?></a></td>
                 <td class="<?= UI_TD ?>"><?= e($row['username'] ?? 'Khách vãng lai') ?></td>
                 <td class="<?= UI_TD ?>"><?= e($row['created_at']) ?></td>
                 <td class="<?= UI_TD ?>"><?= number_format($row['total'], 0, ',', '.') ?> đ</td>
                 <td class="<?= UI_TD ?>">
-                    <?php 
-                        $status = $row['status'];
-                        $badgeType = 'secondary';
-                        $statusText = 'Mới';
-
-                        if ($status === 'shipping') {
-                            $badgeType = 'outline';
-                            $statusText = 'Đang giao';
-                        } elseif ($status === 'done') {
-                            $badgeType = 'default';
-                            $statusText = 'Hoàn thành';
-                        } elseif ($status === 'cancelled') {
-                            $badgeType = 'destructive';
-                            $statusText = 'Đã hủy';
-                        }
-                    ?>
-                    <span class="<?= ui_badge($badgeType) ?>"><?= e($statusText) ?></span>
+                    <?= order_status_badge($row['status']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -106,7 +99,4 @@ $recent_orders = $recentOrdersStmt->fetchAll();
     </table>
 </div>
 
-<?php 
-// Lùi 1 cấp (../) để gọi footer
-require_once __DIR__ . '/../includes/footer.php'; 
-?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>
