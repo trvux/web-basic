@@ -86,21 +86,25 @@ require_once __DIR__ . '/../includes/header.php';
   </table>
 </div>
 
-<form method="post" class="mt-4 flex flex-wrap items-center justify-between gap-3">
-  <div class="grid w-full max-w-md gap-4">
-  <div class="<?= UI_FIELD ?>">
-    <label class="<?= UI_LABEL ?>" for="phone">Số điện thoại</label>
-    <input class="<?= UI_INPUT ?>" id="phone" name="phone" value="<?= e($phone) ?>" inputmode="numeric" required>
+<form method="post" class="mt-4 grid gap-4">
+  <div class="<?= UI_CARD ?> max-w-md">
+    <div class="<?= UI_CARD_CONTENT ?> gap-4!">
+      <div class="<?= UI_FIELD ?>">
+        <label class="<?= UI_LABEL ?>" for="phone">Số điện thoại</label>
+        <input class="<?= UI_INPUT ?>" id="phone" name="phone" value="<?= e($phone) ?>" inputmode="numeric" maxlength="10" required>
+      </div>
+      <div class="<?= UI_FIELD ?>">
+        <label class="<?= UI_LABEL ?>" for="address">Địa chỉ giao hàng</label>
+        <input class="<?= UI_INPUT ?>" id="address" name="address" value="<?= e($address) ?>" maxlength="255" required>
+      </div>
+    </div>
   </div>
-  <div class="<?= UI_FIELD ?>">
-    <label class="<?= UI_LABEL ?>" for="address">Địa chỉ giao hàng</label>
-    <input class="<?= UI_INPUT ?>" id="address" name="address" value="<?= e($address) ?>" maxlength="255" required>
-  </div>
-</div>
-  <p class="text-lg">Tổng cộng: <b class="text-primary"><?= number_format($total) ?>đ</b></p>
-  <div class="flex gap-2">
-    <a href="index.php" class="<?= ui_btn('outline') ?>">Quay lại giỏ</a>
-    <button type="submit" class="<?= ui_btn() ?>">Xác nhận đặt hàng</button>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <p class="text-lg">Tổng cộng: <b class="text-primary"><?= number_format($total) ?>đ</b></p>
+    <div class="flex gap-2">
+      <a href="index.php" class="<?= ui_btn('outline') ?>">Quay lại giỏ</a>
+      <button type="submit" class="<?= ui_btn() ?>">Xác nhận đặt hàng</button>
+    </div>
   </div>
 </form>
 

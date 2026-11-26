@@ -29,6 +29,9 @@ $orders = $stmt->fetchAll();
         <p class="<?= UI_CARD_DESC ?>"><?= e($o['created_at']) ?> - Tổng: <b class="text-primary"><?= number_format($o['total']) ?>đ</b></p>
       </div>
       <div class="<?= UI_CARD_CONTENT ?>">
+        <?php if ($o['address']): ?>
+          <p class="text-muted-foreground">Giao đến: <?= e($o['address']) ?> · <?= e($o['phone']) ?></p>
+        <?php endif; ?>
         <table class="<?= UI_TABLE ?>">
           <thead>
             <tr class="<?= UI_TR ?>">

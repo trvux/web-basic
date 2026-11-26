@@ -9,6 +9,8 @@ data/.cache/
 
 # Dữ liệu/ảnh lấy từ gearvn.com: chỉ nằm trong DB và máy, KHÔNG đưa lên git (repo public)
 data/
+# gói dữ liệu gửi riêng, không bao giờ đưa lên git
+*.zip
 src/uploads/products/
 # ảnh admin upload khi test, không đưa lên git
 src/uploads/banners/*

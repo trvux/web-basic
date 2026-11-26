@@ -22,7 +22,7 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 | Minh | S4 | Responsive 2 trang trên | ⬜ | |
 | Phúc | A4 | Quản lý banner | ✅ | PR #19; leader sửa cho khớp DB, thêm upload ảnh |
 | Phúc | A5 | Quản lý bài viết | ✅ | PR #19; leader sửa cho khớp DB, thêm upload ảnh |
-| Phúc | U3 | Validate giỏ và thanh toán | ⬜ | |
+| Phúc | U3 | Validate giỏ và thanh toán | ✅ | PR #21; leader chỉnh giao diện, hiện SĐT và địa chỉ ở trang đơn |
 
 ## 1. Rubric → việc phải làm
 
@@ -98,7 +98,7 @@ CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi D
 |---|---|---|---|---|
 | A4 | ✅ `admin/banners/`: CRUD banner (ảnh lưu `src/uploads/banners/`, chỉ lưu tên file vào DB; link, thứ tự, bật/tắt) | Banner hiện ở trang chủ. Phần **"quản trị được nội dung website"**. Chỉ nhận jpg/png/webp, giới hạn dung lượng | M | L |
 | A5 | ✅ `admin/posts/`: CRUD bài viết (tiêu đề, nội dung, ảnh lưu `src/uploads/posts/`) | Bài viết hiện ở trang `posts/`. Đây là trang menu "Tin tức" nên **bắt buộc** | M | L |
-| U3 | Validate giỏ/thanh toán: số lượng ≥1, form địa chỉ + SĐT | Không đặt được số lượng âm/0 | S | S |
+| U3 | ✅ Validate giỏ/thanh toán: số lượng ≥1, form địa chỉ + SĐT | Không đặt được số lượng âm/0 | S | S |
 
 **Đã cắt khỏi phạm vi** (làm sau nếu dư thời gian): trang tài khoản/đổi mật khẩu, huỷ đơn phía khách.
 
