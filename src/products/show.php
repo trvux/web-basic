@@ -1,47 +1,4 @@
 <?php
-// Chi tiết sản phẩm, BẢN CƠ BẢN do leader làm để trang chủ có chỗ bấm vào.
-// Minh (việc S2) làm tiếp: bảng thông số từ product_specs, bài viết, sản phẩm cùng hãng.
-require_once __DIR__ . '/../includes/header.php';
-
-$stmt = $pdo->prepare(
-    'SELECT p.*, c.name AS category_name
-     FROM products p LEFT JOIN categories c ON p.category_id = c.id
-     WHERE p.id = ?'
-);
-$stmt->execute([(int)($_GET['id'] ?? 0)]);
-$p = $stmt->fetch();
-if (!$p) http_response_code(404);
-?>
-
-<?php if (!$p): ?>
-  <div class="<?= UI_EMPTY ?>">
-    <div class="<?= UI_EMPTY_TITLE ?>">Không tìm thấy sản phẩm</div>
-    <a href="/index.php" class="<?= ui_btn('outline') ?> mt-3">Về trang chủ</a>
-  </div>
-<?php else: ?>
-  <?= ui_breadcrumb(['Trang chủ' => '/index.php'], $p['name']) ?>
-  <div class="grid items-start gap-6 md:grid-cols-2">
-    <img src="<?= e($p['image']) ?>" alt="<?= e($p['name']) ?>" class="aspect-square w-full rounded-xl bg-card object-cover ring-1 ring-foreground/10">
-    <div class="grid gap-3">
-      <?php if ($p['category_name']): ?><span class="<?= ui_badge('secondary') ?>"><?= e($p['category_name']) ?></span><?php endif; ?>
-      <h1 class="text-2xl font-semibold tracking-tight"><?= e($p['name']) ?></h1>
-      <div class="flex flex-wrap items-baseline gap-3">
-        <span class="text-3xl font-bold text-primary"><?= number_format($p['price']) ?>đ</span>
-        <?php if (!empty($p['old_price']) && $p['old_price'] > $p['price']): ?>
-          <span class="text-muted-foreground line-through"><?= number_format($p['old_price']) ?>đ</span>
-        <?php endif; ?>
-      </div>
-      <p class="text-muted-foreground"><?= e($p['description']) ?></p>
-      <p class="text-sm"><?= $p['stock'] > 0 ? 'Còn ' . (int)$p['stock'] . ' sản phẩm' : 'Tạm hết hàng' ?></p>
-      <?php if ($p['stock'] > 0): ?>
-        <a href="/cart/add.php?id=<?= $p['id'] ?>" class="<?= ui_btn('default', 'lg') ?> w-fit">Thêm vào giỏ</a>
-      <?php endif; ?>
-    </div>
-  </div>
-<?php endif; ?>
-
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
-<?php
 /**
  * S2 — Chi tiết sản phẩm
  * URL: /products/show.php?id=<id>
@@ -63,7 +20,6 @@ $id = (int)($_GET['id'] ?? 0);
 $product       = null;
 $spec_groups   = [];   // ['CPU' => [row, row...], 'RAM' => [...], ...]
 $same_brand    = [];
-$related_posts = [];
 
 // ============ 2. TRUY VẤN DỮ LIỆU ============
 if ($id > 0) {
@@ -104,37 +60,6 @@ if ($id > 0) {
             $stmt->execute([$product['brand'], $id]);
             $same_brand = $stmt->fetchAll();
         }
-
-        // --- 2.4. Bài viết liên quan ---
-        // Ưu tiên bài gắn đúng product_id; fallback 3 bài mới nhất.
-        // Bọc try/catch phòng trường hợp bảng posts chưa có cột product_id.
-        try {
-            $stmt = $pdo->prepare(
-                'SELECT id, title, slug, image, excerpt, created_at
-                 FROM posts
-                 WHERE product_id = ?
-                 ORDER BY created_at DESC
-                 LIMIT 3'
-            );
-            $stmt->execute([$id]);
-            $related_posts = $stmt->fetchAll();
-        } catch (PDOException $e) {
-            $related_posts = []; // bảng chưa có product_id → bỏ qua
-        }
-
-        // Fallback: 3 bài mới nhất nếu không có bài gắn sản phẩm
-        if (!$related_posts) {
-            try {
-                $related_posts = $pdo->query(
-                    'SELECT id, title, slug, image, excerpt, created_at
-                     FROM posts
-                     ORDER BY created_at DESC
-                     LIMIT 3'
-                )->fetchAll();
-            } catch (PDOException $e) {
-                $related_posts = []; // bảng posts chưa tồn tại → bỏ qua
-            }
-        }
     } else {
         http_response_code(404);
     }
@@ -146,7 +71,7 @@ if ($id > 0) {
 /** Format giá VNĐ: 25990000 → "25.990.000đ" */
 function format_price($n): string
 {
-    return number_format((int)$n, 0, ',', '.') . 'đ';
+    return number_format((int)$n) . 'đ';
 }
 
 /** Ảnh fallback khi sản phẩm không có ảnh */
@@ -224,11 +149,11 @@ require_once __DIR__ . '/../includes/header.php';
             <span class="text-muted-foreground"><?= e($product['category_name']) ?></span>
           <?php endif; ?>
           <?php if ((int)$product['stock'] > 0): ?>
-            <span class="text-green-600 font-medium">
+            <span class="text-primary font-medium">
               Còn hàng (<?= (int)$product['stock'] ?>)
             </span>
           <?php else: ?>
-            <span class="text-red-500 font-medium">Hết hàng</span>
+            <span class="text-destructive font-medium">Hết hàng</span>
           <?php endif; ?>
         </div>
 
@@ -248,7 +173,7 @@ require_once __DIR__ . '/../includes/header.php';
               }
             ?>
             <?php if ($discount > 0): ?>
-              <span class="text-xs font-bold text-white bg-red-500 px-2 py-0.5 rounded">
+              <span class="<?= ui_badge('destructive') ?>">
                 -<?= $discount ?>%
               </span>
             <?php endif; ?>
@@ -258,10 +183,11 @@ require_once __DIR__ . '/../includes/header.php';
         <!-- Nút hành động -->
         <div class="mt-6 flex flex-wrap gap-3">
           <?php if ((int)$product['stock'] > 0): ?>
-            <a href="/cart/add.php?id=<?= (int)$product['id'] ?>"
-               class="<?= ui_btn() ?>">
-              🛒 Thêm vào giỏ
-            </a>
+             <form action="/cart/add.php" method="get" class="flex gap-2">
+              <input type="hidden" name="id" value="<?= (int)$product['id'] ?>">
+              <input type="number" name="qty" value="1" min="1" max="<?= (int)$product['stock'] ?>" aria-label="Số lượng" class="<?= UI_INPUT ?> w-20!">
+              <button type="submit" class="<?= ui_btn() ?>">Thêm vào giỏ</button>
+            </form>
           <?php else: ?>
             <span class="<?= ui_btn() ?> opacity-50 pointer-events-none cursor-not-allowed">
               Hết hàng
@@ -315,7 +241,16 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
       </section>
     <?php endif; ?>
-
+    <?php if (!empty($product['article'])): ?>
+      <section class="mt-10">
+        <h2 class="text-xl font-bold mb-4">Giới thiệu sản phẩm</h2>
+        <div class="<?= UI_CARD ?>">
+          <div class="<?= UI_CARD_CONTENT ?> leading-relaxed [&_h2]:text-base [&_h2]:font-semibold [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-5">
+            <?= strip_tags($product['article'], '<h2><h3><p><ul><li>') ?>
+          </div>
+        </div>
+      </section>
+    <?php endif; ?>
     <!-- ============ SẢN PHẨM CÙNG HÃNG ============ -->
     <?php if ($same_brand): ?>
       <section class="mt-10">
@@ -355,47 +290,6 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
       </section>
     <?php endif; ?>
-
-    <!-- ============ BÀI VIẾT LIÊN QUAN ============ -->
-    <?php if ($related_posts): ?>
-      <section class="mt-10">
-        <h2 class="text-xl font-bold mb-4">Bài viết liên quan</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <?php foreach ($related_posts as $post): ?>
-            <?php
-              // Tự chọn URL theo dữ liệu có sẵn (ưu tiên id, fallback slug)
-              $post_url = !empty($post['id'])
-                  ? '/posts/show.php?id=' . (int)$post['id']
-                  : '/posts/show.php?slug=' . urlencode($post['slug'] ?? '');
-            ?>
-            <a href="<?= e($post_url) ?>"
-               class="<?= UI_CARD ?> hover:shadow-md transition flex flex-col">
-              <?php if (!empty($post['image'])): ?>
-                <img src="<?= e(product_image($post['image'])) ?>"
-                     alt="<?= e($post['title']) ?>"
-                     class="h-40 w-full object-cover bg-muted">
-              <?php endif; ?>
-              <div class="px-4 py-3 flex flex-col flex-1">
-                <h3 class="text-sm font-semibold line-clamp-2">
-                  <?= e($post['title']) ?>
-                </h3>
-                <?php if (!empty($post['excerpt'])): ?>
-                  <p class="text-xs text-muted-foreground mt-1 line-clamp-3">
-                    <?= e($post['excerpt']) ?>
-                  </p>
-                <?php endif; ?>
-                <?php if (!empty($post['created_at'])): ?>
-                  <p class="text-xs text-muted-foreground mt-2 mt-auto pt-2">
-                    <?= date('d/m/Y', strtotime($post['created_at'])) ?>
-                  </p>
-                <?php endif; ?>
-              </div>
-            </a>
-          <?php endforeach; ?>
-        </div>
-      </section>
-    <?php endif; ?>
-
   <?php endif; ?>
 </div>
 
