@@ -241,16 +241,6 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
       </section>
     <?php endif; ?>
-    <?php if (!empty($product['article'])): ?>
-      <section class="mt-10">
-        <h2 class="text-xl font-bold mb-4">Giới thiệu sản phẩm</h2>
-        <div class="<?= UI_CARD ?>">
-          <div class="<?= UI_CARD_CONTENT ?> leading-relaxed [&_h2]:text-base [&_h2]:font-semibold [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-5">
-            <?= strip_tags($product['article'], '<h2><h3><p><ul><li>') ?>
-          </div>
-        </div>
-      </section>
-    <?php endif; ?>
     <!-- ============ SẢN PHẨM CÙNG HÃNG ============ -->
     <?php if ($same_brand): ?>
       <section class="mt-10">
