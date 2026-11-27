@@ -95,7 +95,7 @@ function product_image(?string $path): string
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
-<div class="container mx-auto px-4 py-6 max-sm:p-0">
+<div class="container mx-auto px-4 py-6 max-lg:p-0">
 
   <?php if (!$product): ?>
 
