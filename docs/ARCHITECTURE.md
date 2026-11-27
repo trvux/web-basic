@@ -71,7 +71,7 @@ Ví dụ form đăng nhập (`src/auth/login.php`):
 | POST | `/auth/login.php` | `username`, `password` | thành công: redirect `/admin/index.php` (admin) hoặc `/index.php` (user). Sai: hiện lỗi |
 | POST | `/auth/register.php` | `username`, `password`, `confirm`, `full_name` (không bắt buộc) | thành công: redirect `login.php` |
 | GET | `/auth/logout.php` | không | xoá session, redirect `/index.php` |
-| GET | `/cart/add.php` | `id` (id sản phẩm) | thêm vào giỏ, redirect `cart/index.php` |
+| GET | `/cart/add.php` | `id` (id sản phẩm), `qty` (không bắt buộc, mặc định 1) | thêm vào giỏ (không vượt tồn kho), redirect `cart/index.php` |
 | POST | `/cart/update.php` | `qty` (mảng số lượng theo từng sản phẩm) | cập nhật giỏ, redirect về giỏ |
 | GET | `/cart/remove.php` | `id` | xoá khỏi giỏ, redirect về giỏ |
 | POST | `/cart/checkout.php` | không (lấy giỏ từ session) | tạo đơn, redirect `/orders/index.php`. Giỏ rỗng: về giỏ |

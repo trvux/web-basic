@@ -4,7 +4,7 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 
 **Hạn chốt: 28/11/2026, mọi thứ phải xong và chạy được.** Hôm nay 25/11. Huy đã làm xong nền, 3 bạn còn lại bắt đầu từ số 0, nên backlog này **cắt gọn chỉ còn việc ăn điểm rubric**.
 
-## 0. Tiến độ (cập nhật 27/11, 00:20)
+## 0. Tiến độ (cập nhật 27/11, 20:20)
 
 ✅ xong, đã merge · 🟡 đang làm · ⬜ chưa làm
 
@@ -17,9 +17,9 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 | Phong | A1 | Quản lý người dùng | ✅ | PR #12 |
 | Phong | A2 | Chi tiết đơn, đổi trạng thái | ✅ | PR #15; leader bổ sung nhãn tiếng Việt, trả kho khi huỷ, khách xem trạng thái |
 | Phong | A3 | Dashboard thống kê | ✅ | Leader bổ sung đơn theo trạng thái, thẻ bấm được |
-| Minh | S1 | Danh sách sản phẩm: lọc, sắp xếp, phân trang | ⬜ | Trang còn "Đang xây dựng" |
-| Minh | S2 | Chi tiết sản phẩm đầy đủ | 🟡 | PR #11 để file sai chỗ, cần sửa |
-| Minh | S4 | Responsive 2 trang trên | ⬜ | |
+| Minh | S1 | Danh sách sản phẩm: lọc, sắp xếp, phân trang | ✅ | PR #23 |
+| Minh | S2 | Chi tiết sản phẩm đầy đủ | 🟡 | Làm tiếp trong `src/products/show.php` (PR #11, #17 đặt file sai, đã đóng). Chọn số lượng: gửi `qty` tới `cart/add.php` |
+| Minh | S4 | Responsive 2 trang trên | 🟡 | Trang danh sách đạt 375px; còn trang chi tiết |
 | Phúc | A4 | Quản lý banner | ✅ | PR #19; leader sửa cho khớp DB, thêm upload ảnh |
 | Phúc | A5 | Quản lý bài viết | ✅ | PR #19; leader sửa cho khớp DB, thêm upload ảnh |
 | Phúc | U3 | Validate giỏ và thanh toán | ✅ | PR #21; leader chỉnh giao diện, hiện SĐT và địa chỉ ở trang đơn |
@@ -80,7 +80,7 @@ CI tự báo đỏ nếu PR sửa file ngoài phần của mình. Cần đổi D
 
 | ID | Việc | Tiêu chí hoàn thành | Ưu | Cỡ |
 |---|---|---|---|---|
-| S1 | `products/index.php`: **lọc** hãng/khoảng giá/RAM/SSD, **sắp xếp** giá, kèm tìm theo tên và **phân trang** (dùng `ui_pagination()`; trang chủ đã có tìm tên + lọc danh mục, copy rồi mở rộng) | Lọc kết hợp được, URL giữ bộ lọc, dùng `prepare()`, có thông báo khi không có kết quả | M | L |
+| S1 | ✅ `products/index.php`: **lọc** hãng/khoảng giá/RAM/SSD, **sắp xếp** giá, kèm tìm theo tên và **phân trang** (dùng `ui_pagination()`; trang chủ đã có tìm tên + lọc danh mục, copy rồi mở rộng) | Lọc kết hợp được, URL giữ bộ lọc, dùng `prepare()`, có thông báo khi không có kết quả | M | L |
 | S2 | `products/show.php` đã có bản cơ bản. Làm thêm: bảng thông số từ `product_specs`, bài giới thiệu (`article`), sản phẩm cùng hãng, chọn số lượng | Trang chi tiết đầy đủ thông tin, không lỗi khi thiếu dữ liệu | M | M |
 | S4 | Responsive mobile cho 2 trang trên | Không vỡ layout ở 375px | S | S |
 
