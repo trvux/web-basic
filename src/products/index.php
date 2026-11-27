@@ -146,9 +146,9 @@ require_once __DIR__ . '/../includes/header.php';
       Bộ lọc<?= $panel_filters > 0 ? ' (' . $panel_filters . ')' : '' ?>
     </label>
 
-    <div class="contents max-lg:order-last max-lg:col-span-full max-lg:hidden max-lg:grid-cols-2 max-lg:gap-3 max-lg:peer-checked:grid sm:max-lg:grid-cols-4">
+    <div class="contents max-lg:order-last max-lg:col-span-full max-lg:hidden max-lg:grid-cols-2 max-lg:gap-3 max-lg:peer-checked:grid sm:max-lg:grid-cols-4 sm:max-lg:[&>*]:text-sm">
 
-    <select name="category_id" class="<?= UI_INPUT ?>">
+    <select name="category_id" class="<?= UI_INPUT ?> max-lg:col-span-2">
       <option value="0">Tất cả danh mục</option>
       <?php foreach ($categories as $c): ?>
         <option value="<?= (int)$c['id'] ?>" <?= $category_id === (int)$c['id'] ? 'selected' : '' ?>>
@@ -184,11 +184,11 @@ require_once __DIR__ . '/../includes/header.php';
 
     <input type="number" name="price_min" min="0" step="1000"
            value="<?= $price_min ?: '' ?>"
-           placeholder="Giá từ (đ)" class="<?= UI_INPUT ?>">
+           placeholder="Giá từ (đ)" class="<?= UI_INPUT ?> max-lg:order-last">
 
     <input type="number" name="price_max" min="0" step="1000"
            value="<?= $price_max ?: '' ?>"
-           placeholder="Giá đến (đ)" class="<?= UI_INPUT ?>">
+           placeholder="Giá đến (đ)" class="<?= UI_INPUT ?> max-lg:order-last">
 
     <select name="sort" class="<?= UI_INPUT ?>">
       <option value="newest"     <?= $sort === 'newest'     ? 'selected' : '' ?>>Mới nhất</option>

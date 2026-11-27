@@ -82,4 +82,15 @@
     * { @apply border-border outline-ring/50; }
     body { @apply bg-muted/40 text-foreground font-sans antialiased; }
   }
+
+  /* Ô chọn theo shadcn native-select: bỏ mũi tên của trình duyệt, tự vẽ chevron cách mép phải.
+     Viết ngoài @layer để thắng class px-2.5 của UI_SELECT / UI_INPUT. */
+  select:not([multiple]):not([size]) {
+    appearance: none;
+    padding-right: 2rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236E6E73' stroke-opacity='.6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.625rem center;
+    background-size: 1rem;
+  }
 </style>
