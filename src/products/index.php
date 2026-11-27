@@ -5,6 +5,7 @@ require_once __DIR__ . '/../includes/ui.php';
 // ============ 1. ĐỌC THAM SỐ LỌC ============
 $get = fn($k) => is_string($_GET[$k] ?? null) ? $_GET[$k] : '';
 $q           = trim($get('q'));
+$brand       = trim($get('brand'));
 $category_id = (int)($_GET['category_id'] ?? 0);
 $ram         = (int)($_GET['ram'] ?? 0);
 $ssd         = (int)($_GET['ssd'] ?? 0);
