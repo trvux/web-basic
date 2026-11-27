@@ -79,7 +79,7 @@ function product_image(?string $path): string
 {
     $path = trim((string)$path);
     if ($path === '') {
-        return '/uploads/products/placeholder.jpg';
+        return '/assets/no-image.svg';
     }
     // Nếu là URL tuyệt đối (http/https) → giữ nguyên
     if (preg_match('#^https?://#i', $path)) {

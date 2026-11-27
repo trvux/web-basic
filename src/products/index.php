@@ -201,7 +201,7 @@ require_once __DIR__ . '/../includes/header.php';
       <?php foreach ($products as $p): ?>
         <a href="show.php?id=<?= (int)$p['id'] ?>"
            class="<?= UI_CARD ?> hover:shadow-md transition flex flex-col">
-          <img src="<?= e($p['image'] ?: '/uploads/products/placeholder.jpg') ?>"
+          <img src="<?= e($p['image'] ?: '/assets/no-image.svg') ?>"
                alt="<?= e($p['name']) ?>"
                class="h-44 w-full object-cover bg-muted">
           <div class="px-4 py-3 flex flex-col flex-1">
@@ -216,10 +216,17 @@ require_once __DIR__ . '/../includes/header.php';
             <h3 class="font-semibold text-sm line-clamp-2 min-h-[2.5rem]">
               <?= e($p['name']) ?>
             </h3>
-            <p class="text-xs text-muted-foreground mt-1">
-              <?= (int)$p['ram_gb'] ?>GB RAM
-              · <?= (int)$p['ssd_gb'] >= 1024 ? ((int)$p['ssd_gb'] / 1024) . 'TB' : (int)$p['ssd_gb'] . 'GB' ?> SSD
-            </p>
+            <?php
+              // Chỉ ghi thông số nào có dữ liệu: sản phẩm thêm từ admin chưa có RAM, SSD
+              $specs = [];
+              if ($p['ram_gb']) $specs[] = (int)$p['ram_gb'] . 'GB RAM';
+              if ($p['ssd_gb']) $specs[] = ($p['ssd_gb'] >= 1024 ? ($p['ssd_gb'] / 1024) . 'TB' : (int)$p['ssd_gb'] . 'GB') . ' SSD';
+            ?>
+            <?php if ($specs): ?>
+              <p class="text-xs text-muted-foreground mt-1">
+                <?= e(implode(' · ', $specs)) ?>
+              </p>
+            <?php endif; ?>
             <div class="mt-auto pt-2">
               <span class="text-primary font-bold"><?= number_format($p['price']) ?>đ</span>
               <?php if (!empty($p['old_price'])): ?>
