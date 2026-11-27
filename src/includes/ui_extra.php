@@ -87,7 +87,8 @@ function ui_carousel($slides, $auto = 0) {
     foreach ($slides as $s) $html .= '<div class="min-w-0 shrink-0 grow-0 basis-full snap-start">' . $s . '</div>';
     $html .= '</div>';
     if (count($slides) > 1) {
-        $btn = ui_btn('outline', 'sm') . ' absolute! inset-y-0 my-auto rounded-full!';
+        // Trên điện thoại ẩn mũi tên vì che chữ trên banner; người dùng vuốt ngang để đổi
+        $btn = ui_btn('outline', 'sm') . ' absolute! inset-y-0 my-auto rounded-full! max-sm:hidden!';
         $html .= '<button type="button" class="' . $btn . ' left-2" data-prev aria-label="Trước">‹</button>'
                . '<button type="button" class="' . $btn . ' right-2" data-next aria-label="Sau">›</button>';
     }
