@@ -108,10 +108,13 @@ foreach (['q','brand','category_id','ram','ssd','price_min','price_max'] as $k) 
     if (!empty($_GET[$k])) $active_filters++;
 }
 
+// Số bộ lọc đang bật trong phần thu gọn trên điện thoại (không tính ô tìm tên)
+$panel_filters = $active_filters - ($q !== '' ? 1 : 0);
+
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
-<div class="container mx-auto px-4 py-6">
+<div class="container mx-auto px-4 py-6 max-sm:p-0">
   <!-- ============ HEADER ============ -->
   <div class="flex items-end justify-between mb-4 flex-wrap gap-2">
     <div>
@@ -132,10 +135,18 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- ============ FORM LỌC ============ -->
-  <form method="get" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+  <form method="get" class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
     <input type="text" name="q" value="<?= e($q) ?>"
            placeholder="Tìm theo tên sản phẩm..."
-           class="<?= UI_INPUT ?> sm:col-span-2">
+           class="<?= UI_INPUT ?> col-span-2">
+
+    <!-- Điện thoại: các ô lọc thu gọn, bấm "Bộ lọc" để mở (chỉ dùng CSS). Từ sm trở lên hiện đủ -->
+    <input type="checkbox" id="loc-toggle" class="peer sr-only sm:hidden">
+    <label for="loc-toggle" class="<?= ui_btn('outline') ?> cursor-pointer peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 sm:hidden!">
+      Bộ lọc<?= $panel_filters > 0 ? ' (' . $panel_filters . ')' : '' ?>
+    </label>
+
+    <div class="contents max-sm:order-last max-sm:col-span-2 max-sm:hidden max-sm:grid-cols-2 max-sm:gap-3 max-sm:peer-checked:grid">
 
     <select name="category_id" class="<?= UI_INPUT ?>">
       <option value="0">Tất cả danh mục</option>
@@ -185,6 +196,7 @@ require_once __DIR__ . '/../includes/header.php';
       <option value="price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Giá giảm dần</option>
       <option value="name_asc"   <?= $sort === 'name_asc'   ? 'selected' : '' ?>>Tên A→Z</option>
     </select>
+    </div>
 
     <button type="submit" class="<?= ui_btn() ?>">Áp dụng</button>
   </form>
@@ -201,7 +213,7 @@ require_once __DIR__ . '/../includes/header.php';
       <?php foreach ($products as $p): ?>
         <a href="show.php?id=<?= (int)$p['id'] ?>"
            class="<?= UI_CARD ?> hover:shadow-md transition flex flex-col">
-          <img src="<?= e($p['image'] ?: '/uploads/products/placeholder.jpg') ?>"
+          <img src="<?= e($p['image'] ?: '/assets/no-image.svg') ?>"
                alt="<?= e($p['name']) ?>"
                class="h-44 w-full object-cover bg-muted">
           <div class="px-4 py-3 flex flex-col flex-1">
@@ -216,10 +228,17 @@ require_once __DIR__ . '/../includes/header.php';
             <h3 class="font-semibold text-sm line-clamp-2 min-h-[2.5rem]">
               <?= e($p['name']) ?>
             </h3>
-            <p class="text-xs text-muted-foreground mt-1">
-              <?= (int)$p['ram_gb'] ?>GB RAM
-              · <?= (int)$p['ssd_gb'] >= 1024 ? ((int)$p['ssd_gb'] / 1024) . 'TB' : (int)$p['ssd_gb'] . 'GB' ?> SSD
-            </p>
+            <?php
+              // Chỉ ghi thông số nào có dữ liệu: sản phẩm thêm từ admin chưa có RAM, SSD
+              $specs = [];
+              if ($p['ram_gb']) $specs[] = (int)$p['ram_gb'] . 'GB RAM';
+              if ($p['ssd_gb']) $specs[] = ($p['ssd_gb'] >= 1024 ? ($p['ssd_gb'] / 1024) . 'TB' : (int)$p['ssd_gb'] . 'GB') . ' SSD';
+            ?>
+            <?php if ($specs): ?>
+              <p class="text-xs text-muted-foreground mt-1">
+                <?= e(implode(' · ', $specs)) ?>
+              </p>
+            <?php endif; ?>
             <div class="mt-auto pt-2">
               <span class="text-primary font-bold"><?= number_format($p['price']) ?>đ</span>
               <?php if (!empty($p['old_price'])): ?>

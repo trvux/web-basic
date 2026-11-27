@@ -79,7 +79,7 @@ $categories = $pdo->query('SELECT * FROM categories')->fetchAll();
   <?php foreach ($products as $p): ?>
     <div class="<?= UI_CARD ?> pt-0! gap-3!">
       <a href="/products/show.php?id=<?= $p['id'] ?>">
-        <img src="<?= e($p['image']) ?>" alt="<?= e($p['name']) ?>" loading="lazy" class="aspect-square w-full bg-muted object-cover">
+        <img src="<?= e($p['image'] ?: '/assets/no-image.svg') ?>" alt="<?= e($p['name']) ?>" loading="lazy" class="aspect-square w-full bg-muted object-cover">
       </a>
       <div class="<?= UI_CARD_CONTENT ?> gap-1.5! flex-1">
         <?php if ($p['category_name']): ?>

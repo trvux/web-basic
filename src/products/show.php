@@ -79,7 +79,7 @@ function product_image(?string $path): string
 {
     $path = trim((string)$path);
     if ($path === '') {
-        return '/uploads/products/placeholder.jpg';
+        return '/assets/no-image.svg';
     }
     // Nếu là URL tuyệt đối (http/https) → giữ nguyên
     if (preg_match('#^https?://#i', $path)) {
@@ -95,7 +95,7 @@ function product_image(?string $path): string
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
-<div class="container mx-auto px-4 py-6">
+<div class="container mx-auto px-4 py-6 max-sm:p-0">
 
   <?php if (!$product): ?>
 
