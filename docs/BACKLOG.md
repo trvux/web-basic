@@ -4,7 +4,7 @@ Nguồn: BM-006 (đề bài) + BM-007 (rubric). Nhóm 4 người: Huy (leader), 
 
 **Hạn chốt: 28/11/2026, mọi thứ phải xong và chạy được.** Hôm nay 25/11. Huy đã làm xong nền, 3 bạn còn lại bắt đầu từ số 0, nên backlog này **cắt gọn chỉ còn việc ăn điểm rubric**.
 
-## 0. Tiến độ (cập nhật 27/11, 20:30)
+## 0. Tiến độ (cập nhật 27/11, 20:20)
 
 ✅ xong, đã merge · 🟡 đang làm · ⬜ chưa làm
 
