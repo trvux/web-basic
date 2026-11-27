@@ -114,7 +114,7 @@ $panel_filters = $active_filters - ($q !== '' ? 1 : 0);
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
-<div class="container mx-auto px-4 py-6 max-sm:p-0">
+<div class="container mx-auto px-4 py-6 max-lg:p-0">
   <!-- ============ HEADER ============ -->
   <div class="flex items-end justify-between mb-4 flex-wrap gap-2">
     <div>
@@ -135,18 +135,18 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- ============ FORM LỌC ============ -->
-  <form method="get" class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+  <form method="get" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
     <input type="text" name="q" value="<?= e($q) ?>"
            placeholder="Tìm theo tên sản phẩm..."
            class="<?= UI_INPUT ?> col-span-2">
 
-    <!-- Điện thoại: các ô lọc thu gọn, bấm "Bộ lọc" để mở (chỉ dùng CSS). Từ sm trở lên hiện đủ -->
-    <input type="checkbox" id="loc-toggle" class="peer sr-only sm:hidden">
-    <label for="loc-toggle" class="<?= ui_btn('outline') ?> cursor-pointer peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 sm:hidden!">
+    <!-- Điện thoại và máy tính bảng: các ô lọc thu gọn, bấm "Bộ lọc" để mở (chỉ dùng CSS). Từ lg trở lên hiện đủ -->
+    <input type="checkbox" id="loc-toggle" class="peer sr-only lg:hidden">
+    <label for="loc-toggle" class="<?= ui_btn('outline') ?> cursor-pointer peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 lg:hidden!">
       Bộ lọc<?= $panel_filters > 0 ? ' (' . $panel_filters . ')' : '' ?>
     </label>
 
-    <div class="contents max-sm:order-last max-sm:col-span-2 max-sm:hidden max-sm:grid-cols-2 max-sm:gap-3 max-sm:peer-checked:grid">
+    <div class="contents max-lg:order-last max-lg:col-span-full max-lg:hidden max-lg:grid-cols-2 max-lg:gap-3 max-lg:peer-checked:grid sm:max-lg:grid-cols-4">
 
     <select name="category_id" class="<?= UI_INPUT ?>">
       <option value="0">Tất cả danh mục</option>
@@ -209,7 +209,7 @@ require_once __DIR__ . '/../includes/header.php';
       <a href="index.php" class="<?= ui_btn() ?> inline-block">Xóa bộ lọc</a>
     </div>
   <?php else: ?>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
       <?php foreach ($products as $p): ?>
         <a href="show.php?id=<?= (int)$p['id'] ?>"
            class="<?= UI_CARD ?> hover:shadow-md transition flex flex-col">
