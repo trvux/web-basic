@@ -56,8 +56,8 @@ $items = $itemStmt->fetchAll();
 
     <div class="<?= UI_CARD ?> p-4">
         <h2 class="font-bold text-lg mb-2">Cập nhật trạng thái</h2>
-        <form action="" method="POST" class="flex gap-4 items-end">
-            <div class="flex-1">
+        <form action="" method="POST" class="flex flex-wrap gap-4 items-end">
+            <div class="min-w-36 flex-1">
                 <label class="<?= UI_LABEL ?> mb-2" for="status">Đổi sang</label>
                 <select id="status" name="status" class="<?= UI_SELECT ?> w-full">
                     <?php foreach (ORDER_STATUSES as $value => [$label]): ?>
